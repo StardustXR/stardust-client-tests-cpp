@@ -1,4 +1,8 @@
+#include <chrono>
+#include <thread>
+
 #include <stardustxr/client/clientconnector.hpp>
+#include <stardustxr/messenger.hpp>
 #include <stardustxr/dummy/blank_scenegraph.hpp>
 
 int main(int argc, char *argv[]) {
@@ -14,16 +18,14 @@ int main(int argc, char *argv[]) {
 
 	flexbuffers::Builder fbb;
 	fbb.TypedVector([&]() {
-		fbb.Double(0);
-		fbb.Double(0);
-		fbb.Double(0);
+		fbb.Double(2);
+		fbb.Double(2);
+		fbb.Double(2);
 	});
 	fbb.Finish();
 	std::vector<uint8_t> data = fbb.GetBuffer();
 
-	messenger.sendSignal("/hmd", "setPosition", data);
-
-	printf("Got back echo '%s'\n", echo);
+	messenger.sendSignal("/test/mesh", "set_scale", data);
 
 	std::this_thread::sleep_for(std::chrono::seconds(300));
 

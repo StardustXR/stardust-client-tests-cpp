@@ -9,5 +9,5 @@ dependencies = [libstardustxr]
 shared_library('realsense-hmd',
 	sources,
 	include_directories: include,
-	dependencies: dependencies,)
+	dependencies: dependencies
 )
