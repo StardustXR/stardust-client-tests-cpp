@@ -18,16 +18,15 @@ int main(int argc, char *argv[]) {
 
 	flexbuffers::Builder fbb;
 	fbb.TypedVector([&]() {
-		fbb.Double(2);
-		fbb.Double(2);
-		fbb.Double(2);
+		fbb.Double(0.5f);
+		fbb.Double(0.5f);
+		fbb.Double(0.5f);
 	});
 	fbb.Finish();
 	std::vector<uint8_t> data = fbb.GetBuffer();
 
+	std::this_thread::sleep_for(std::chrono::seconds(5));
 	messenger.sendSignal("/test/mesh", "set_scale", data);
-
-	std::this_thread::sleep_for(std::chrono::seconds(300));
 
 	return 0;
 }
