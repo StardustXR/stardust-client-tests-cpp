@@ -9,5 +9,6 @@ dependencies = [libstardustxr]
 shared_library('realsense-hmd',
 	sources,
 	include_directories: include,
+	link_args: '-lflatbuffers',
 	dependencies: dependencies
 )

@@ -9,5 +9,6 @@ dependencies = [libstardustxr]
 executable('mesh_scale',
 	sources,
 #	include_directories: include,
+	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
