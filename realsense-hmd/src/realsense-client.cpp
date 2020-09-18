@@ -12,18 +12,13 @@ int main(int argc, char *argv[]) {
 	StardustXR::ClientScenegraph scenegraph;
 	StardustXR::ClientMessenger messenger(readFD, writeFD, &scenegraph);
 
-	flexbuffers::Builder fbb;
-	fbb.TypedVector([&]() {
-		fbb.Double(0);
-		fbb.Double(0);
-		fbb.Double(0);
+	messenger.sendSignal("/hmd", "setPosition", [](flexbuffers::Builder &fbb) {
+		fbb.TypedVector([&]() {
+			fbb.Double(0);
+			fbb.Double(0);
+			fbb.Double(0);
+		});
 	});
-	fbb.Finish();
-	std::vector<uint8_t> data = fbb.GetBuffer();
-
-	messenger.sendSignal("/hmd", "setPosition", data);
-
-	printf("Got back echo '%s'\n", echo);
 
 	std::this_thread::sleep_for(std::chrono::seconds(300));
 

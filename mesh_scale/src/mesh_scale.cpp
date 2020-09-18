@@ -15,17 +15,15 @@ int main(int argc, char *argv[]) {
 	StardustXR::ClientScenegraph scenegraph;
 	StardustXR::ClientMessenger messenger(readFD, writeFD, &scenegraph);
 
-	flexbuffers::Builder fbb;
-	fbb.TypedVector([&]() {
-		fbb.Double(0.5f);
-		fbb.Double(0.5f);
-		fbb.Double(0.5f);
+	messenger.sendSignal("/test/mesh", "set_scale", [](flexbuffers::Builder &fbb) {
+		fbb.TypedVector([&]() {
+			fbb.Double(0.5f);
+			fbb.Double(0.5f);
+			fbb.Double(0.5f);
+		});
 	});
-	fbb.Finish();
-	std::vector<uint8_t> data = fbb.GetBuffer();
 
 	std::this_thread::sleep_for(std::chrono::seconds(5));
-	messenger.sendSignal("/test/mesh", "set_scale", data);
 
 	return 0;
 }

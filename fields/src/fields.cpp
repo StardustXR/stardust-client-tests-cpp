@@ -18,15 +18,15 @@ public:
 		time += delta;
 		printf("Current time is %f with delta of %f\n", time, delta);
 
-		double distance = messenger->executeRemoteMethod("/field/test", "distance", [&](flexbuffers::Builder &fbb) {
+		messenger->executeRemoteMethod("/field/test", "distance", [&](flexbuffers::Builder &fbb) {
 			fbb.TypedVector([&]() {
 				fbb.Double(sin(time)*2.0);
 				fbb.Double(0.0);
 				fbb.Double(cos(time)*2.0);
 			});
-		}).AsDouble();
-
-		printf("Distance is %f\n", distance);
+		}, [](flexbuffers::Reference data) {
+			printf("Distance is %f\n", data.AsDouble());
+		});
 
 		return std::vector<uint8_t>();
 	}
@@ -57,24 +57,24 @@ int main(int argc, char *argv[]) {
 		fbb.Vector([&]() {
 			fbb.String("test");
 			fbb.TypedVector([&]() {
-				fbb.Double(0.0f);
-				fbb.Double(0.0f);
-				fbb.Double(0.0f);
+				fbb.Double(0.0);
+				fbb.Double(0.0);
+				fbb.Double(0.0);
 			});
 			fbb.TypedVector([&]() {
-				fbb.Double(0.0f);
-				fbb.Double(0.0f);
-				fbb.Double(0.0f);
-				fbb.Double(1.0f);
+				fbb.Double(0.0);
+				fbb.Double(0.0);
+				fbb.Double(0.0);
+				fbb.Double(1.0);
 			});
 			fbb.TypedVector([&]() {
-				fbb.Double(1.0f);
-				fbb.Double(1.0f);
-				fbb.Double(1.0f);
+				fbb.Double(0.5);
+				fbb.Double(0.5);
+				fbb.Double(0.5);
 			});
 		});
 	});
-	std::this_thread::sleep_for(std::chrono::seconds(60));
+	std::this_thread::sleep_for(std::chrono::seconds(120));
 
 	return 0;
 }

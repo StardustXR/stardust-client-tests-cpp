@@ -30,15 +30,12 @@ int main(int argc, char *argv[]) {
 	scenegraph.addNode("/lifecycle", new LifeCycleNode());
 	StardustXR::ClientMessenger messenger(readFD, writeFD, &scenegraph);
 
-	flexbuffers::Builder fbb;
-	fbb.Vector([&]() {
-		fbb.String("/lifecycle");
-		fbb.String("logicStep");
+	messenger.sendSignal("/lifecycle", "subscribeLogicStep", [](flexbuffers::Builder &fbb) {
+		fbb.Vector([&]() {
+			fbb.String("/lifecycle");
+			fbb.String("logicStep");
+		});
 	});
-	fbb.Finish();
-	std::vector<uint8_t> data = fbb.GetBuffer();
-
-	messenger.sendSignal("/lifecycle", "subscribeLogicStep", data);
 	std::this_thread::sleep_for(std::chrono::seconds(60));
 
 	return 0;
