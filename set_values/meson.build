@@ -11,12 +11,12 @@ executable('set_position',
 #	include_directories: include,
 	dependencies: dependencies,
 )
-
-# Rotation
-set_rotation_sources = ['src/set_rotation.cpp']
-executable('set_rotation',
-	set_rotation_sources,
-	link_args: '-lflatbuffers',
-#	include_directories: include,
-	dependencies: dependencies,
-)
+#
+# # Rotation
+# set_rotation_sources = ['src/set_rotation.cpp']
+# executable('set_rotation',
+# 	set_rotation_sources,
+# 	link_args: '-lflatbuffers',
+# #	include_directories: include,
+# 	dependencies: dependencies,
+# )
