@@ -1,10 +1,16 @@
+#include <stardustxr/client/connector.hpp>
+#include <stardustxr/client/messenger.hpp>
+#include <stardustxr/client/stardust_scenegraph.hpp>
+
 #include <chrono>
 #include <cmath>
 #include <thread>
+#include <string>
+#include <iostream>
 
-#include <stardustxr/client/connector.hpp>
-#include <stardustxr/client/stardust_scenegraph.hpp>
-#include <stardustxr/client/messenger.hpp>
+using namespace std;
+
+char modelNodePath[128];
 
 class LifeCycleNode : public StardustXR::ClientNode {
 public:
@@ -13,20 +19,20 @@ public:
 		STARDUSTXR_NODE_METHOD("logicStep", &LifeCycleNode::logicStep)
 	}
 
-	std::vector<uint8_t> logicStep(flexbuffers::Reference data, bool returnValue) {
+	vector<uint8_t> logicStep(flexbuffers::Reference data, bool returnValue) {
 		double delta = data.AsVector()[0].AsDouble();
 		time += delta;
-		printf("Current time is %f with delta of %f\n", time, delta);
+		printf("\r\rCurrent time is %f with delta of %f", time, delta);
 
-		messenger->sendSignal("/test/mesh", "setPosition", [&](flexbuffers::Builder &fbb) {
+		messenger->sendSignal(modelNodePath, "setPosition", [&](flexbuffers::Builder &fbb) {
 			fbb.TypedVector([&]() {
-				fbb.Double(std::sin(time)*0.1f);
-				fbb.Double(0.0f);
-				fbb.Double(std::cos(time)*0.1f);
+				fbb.Float(sinf(time)*0.05f);
+				fbb.Float(0.0f);
+				fbb.Float(cosf(time)*0.05f);
 			});
 		});
 
-		return std::vector<uint8_t>();
+		return vector<uint8_t>();
 	}
 private:
 	double time = 0.0;
@@ -44,6 +50,31 @@ int main(int argc, char *argv[]) {
 	StardustXR::ClientStardustScenegraph scenegraph;
 	StardustXR::ClientMessenger messenger(readFD, writeFD, &scenegraph);
 	scenegraph.addNode("/lifecycle", new LifeCycleNode(&messenger));
+
+	sprintf(modelNodePath, "/model/%s", argv[1]);
+
+	messenger.sendSignal("/model", "createFromFile", [&](flexbuffers::Builder &fbb) {
+		fbb.Vector([&]() {
+			fbb.String(argv[1]);
+			fbb.String(argv[2]);
+			fbb.TypedVector([&]() {
+				fbb.Float(0.0f);
+				fbb.Float(0.0f);
+				fbb.Float(0.0f);
+			});
+			fbb.TypedVector([&]() {
+				fbb.Float(0.0f);
+				fbb.Float(0.0f);
+				fbb.Float(0.0f);
+				fbb.Float(1.0f);
+			});
+			fbb.TypedVector([&]() {
+				fbb.Float(1.0f);
+				fbb.Float(1.0f);
+				fbb.Float(1.0f);
+			});
+		});
+	});
 
 	messenger.sendSignal("/lifecycle", "subscribeLogicStep", [&](flexbuffers::Builder &fbb) {
 		fbb.Vector([&]() {

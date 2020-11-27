@@ -13,7 +13,7 @@ public:
 
 	std::vector<uint8_t> logicStep(flexbuffers::Reference data, bool returnValue) {
 		double delta = data.AsVector()[0].AsDouble();
-		printf("Logic step delta is %f\n", delta);
+		printf("\rLogic step delta is %f", delta);
 		return std::vector<uint8_t>();
 	}
 };
