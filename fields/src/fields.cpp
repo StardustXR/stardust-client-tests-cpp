@@ -16,6 +16,7 @@ public:
 	std::vector<uint8_t> logicStep(flexbuffers::Reference data, bool returnValue) {
 		double delta = data.AsVector()[0].AsDouble();
 		time += delta;
+		printf("\033[4;0f"); // Clear the whole screen
 		printf("Current time is %f with delta of %f\n", time, delta);
 
 		messenger->executeRemoteMethod("/field/box", "distance", [&](flexbuffers::Builder &fbb) {
@@ -53,6 +54,7 @@ private:
 };
 
 int main(int argc, char *argv[]) {
+	printf("\033[2J\033[0;0f");
 	printf("Client starting...\n");
 	int readFD, writeFD;
 	if (!StardustXR::ConnectClient("/tmp/stardust.sock", readFD, writeFD)) {
@@ -62,6 +64,7 @@ int main(int argc, char *argv[]) {
 
 	StardustXR::ClientStardustScenegraph scenegraph;
 	StardustXR::ClientMessenger messenger(readFD, writeFD, &scenegraph);
+	messenger.startHandler();
 	scenegraph.addNode("/lifecycle", new LifeCycleNode(&messenger));
 
 	messenger.sendSignal("/lifecycle", "subscribeLogicStep", [&](flexbuffers::Builder &fbb) {
@@ -102,6 +105,8 @@ int main(int argc, char *argv[]) {
 			fbb.Double(0.5);
 		});
 	});
+	printf("\n\n\n");
+
 	std::this_thread::sleep_for(std::chrono::seconds(120));
 
 	return 0;
