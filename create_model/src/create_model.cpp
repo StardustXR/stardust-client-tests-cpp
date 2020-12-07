@@ -22,7 +22,7 @@ public:
 	vector<uint8_t> logicStep(flexbuffers::Reference data, bool returnValue) {
 		double delta = data.AsVector()[0].AsDouble();
 		time += delta;
-		printf("\r\rCurrent time is %f with delta of %f", time, delta);
+		printf("\rCurrent time is %f with delta of %f", time, delta);
 
 		messenger->sendSignal(modelNodePath, "setPosition", [&](flexbuffers::Builder &fbb) {
 			fbb.TypedVector([&]() {
@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
 
 	StardustXR::ClientStardustScenegraph scenegraph;
 	StardustXR::ClientMessenger messenger(readFD, writeFD, &scenegraph);
+	messenger.startHandler();
 	scenegraph.addNode("/lifecycle", new LifeCycleNode(&messenger));
 
 	sprintf(modelNodePath, "/model/%s", argv[1]);
