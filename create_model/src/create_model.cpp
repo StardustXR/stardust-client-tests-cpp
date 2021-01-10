@@ -7,10 +7,15 @@
 #include <thread>
 #include <string>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
+extern char *optarg;
+extern int optind, opterr, optopt;
+
 char modelNodePath[128];
+float scale = 1.0f;
 
 class LifeCycleNode : public StardustXR::ClientNode {
 public:
@@ -46,6 +51,10 @@ int main(int argc, char *argv[]) {
 		perror("Client failed to connect to server");
 		return 1;
 	}
+	
+	int scaleIndex = getopt(argc, argv, "s");
+	if(scaleIndex != -1)
+		scale = stof(
 
 	StardustXR::ClientStardustScenegraph scenegraph;
 	StardustXR::ClientMessenger messenger(readFD, writeFD, &scenegraph);

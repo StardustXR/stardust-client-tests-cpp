@@ -20,16 +20,19 @@ public:
 		printf("Current time is %f with delta of %f\n", time, delta);
 
 		messenger->executeRemoteMethod("/field/box", "distance", [&](flexbuffers::Builder &fbb) {
-			fbb.TypedVector([&]() {
-				fbb.Double(sin(time)*2.0);
-				fbb.Double(0.0);
-				fbb.Double(cos(time)*2.0);
+			fbb.Vector([&]() {
+				fbb.String("/");
+				fbb.TypedVector([&]() {
+					fbb.Double(sin(time)*2.0);
+					fbb.Double(0.0);
+					fbb.Double(cos(time)*2.0);
+				});
 			});
 		}, [](flexbuffers::Reference data) {
 			printf("Distance to stationary box with moving point is %f\n", data.AsDouble());
 		});
 
-		messenger->sendSignal("/field/sphere", "setOrigin", [&](flexbuffers::Builder &fbb) {
+		messenger->sendSignal("/field/sphere", "setPosition", [&](flexbuffers::Builder &fbb) {
 			fbb.TypedVector([&]() {
 				fbb.Double(sin(time)*2.0);
 				fbb.Double(0.0);
@@ -37,10 +40,13 @@ public:
 			});
 		});
 		messenger->executeRemoteMethod("/field/sphere", "distance", [](flexbuffers::Builder &fbb) {
-			fbb.TypedVector([&]() {
-				fbb.Double(0.0);
-				fbb.Double(0.0);
-				fbb.Double(0.0);
+			fbb.Vector([&]() {
+				fbb.String("/");
+				fbb.TypedVector([&]() {
+					fbb.Double(0.0);
+					fbb.Double(0.0);
+					fbb.Double(0.0);
+				});
 			});
 		}, [](flexbuffers::Reference data) {
 			printf("Distance to moving sphere with stationary point is %f\n", data.AsDouble());
