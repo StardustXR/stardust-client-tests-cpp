@@ -27,7 +27,8 @@ public:
 	vector<uint8_t> logicStep(flexbuffers::Reference data, bool returnValue) {
 		double delta = data.AsVector()[0].AsDouble();
 		time += delta;
-		printf("\rCurrent time is %f with delta of %f", time, delta);
+		printf("\033[4;0f"); // Clear the whole screen
+		printf("Current time is %f with delta of %f", time, delta);
 
 		messenger->sendSignal(modelNodePath, "setPosition", [&](flexbuffers::Builder &fbb) {
 			fbb.TypedVector([&]() {
@@ -51,10 +52,6 @@ int main(int argc, char *argv[]) {
 		perror("Client failed to connect to server");
 		return 1;
 	}
-	
-	int scaleIndex = getopt(argc, argv, "s");
-	if(scaleIndex != -1)
-		scale = stof(
 
 	StardustXR::ClientStardustScenegraph scenegraph;
 	StardustXR::ClientMessenger messenger(readFD, writeFD, &scenegraph);
