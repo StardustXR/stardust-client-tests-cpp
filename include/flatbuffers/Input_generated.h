@@ -74,20 +74,11 @@ struct InputData FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const StardustXR::Pointer *input_as_Pointer() const {
     return input_type() == StardustXR::InputDataRaw_Pointer ? static_cast<const StardustXR::Pointer *>(input()) : nullptr;
   }
-  void *mutable_input() {
-    return GetPointer<void *>(VT_INPUT);
-  }
   float distance() const {
     return GetField<float>(VT_DISTANCE, 0.0f);
   }
-  bool mutate_distance(float _distance) {
-    return SetField<float>(VT_DISTANCE, _distance, 0.0f);
-  }
   const flatbuffers::Vector<uint8_t> *datamap() const {
     return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_DATAMAP);
-  }
-  flatbuffers::Vector<uint8_t> *mutable_datamap() {
-    return GetPointer<flatbuffers::Vector<uint8_t> *>(VT_DATAMAP);
   }
   flexbuffers::Reference datamap_flexbuffer_root() const {
     return flexbuffers::GetRoot(datamap()->Data(), datamap()->size());
@@ -195,10 +186,6 @@ inline const StardustXR::InputData *GetInputData(const void *buf) {
 
 inline const StardustXR::InputData *GetSizePrefixedInputData(const void *buf) {
   return flatbuffers::GetSizePrefixedRoot<StardustXR::InputData>(buf);
-}
-
-inline InputData *GetMutableInputData(void *buf) {
-  return flatbuffers::GetMutableRoot<InputData>(buf);
 }
 
 inline bool VerifyInputDataBuffer(

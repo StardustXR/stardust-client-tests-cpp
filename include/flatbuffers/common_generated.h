@@ -30,20 +30,11 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) vec3 FLATBUFFERS_FINAL_CLASS {
   float x() const {
     return flatbuffers::EndianScalar(x_);
   }
-  void mutate_x(float _x) {
-    flatbuffers::WriteScalar(&x_, _x);
-  }
   float y() const {
     return flatbuffers::EndianScalar(y_);
   }
-  void mutate_y(float _y) {
-    flatbuffers::WriteScalar(&y_, _y);
-  }
   float z() const {
     return flatbuffers::EndianScalar(z_);
-  }
-  void mutate_z(float _z) {
-    flatbuffers::WriteScalar(&z_, _z);
   }
 };
 FLATBUFFERS_STRUCT_END(vec3, 12);
