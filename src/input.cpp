@@ -73,10 +73,14 @@ int main(int, char *argv[]) {
 	messenger.startHandler();
 	scenegraph.addNode("/main", new MainNode(&messenger));
 
-	string modelNodePath = CreateModelFromFile(messenger, "iconTest", argv[1], vec3_zero, quat_identity, vec3_one*0.1f);
-	string fieldNodePath = CreateBoxField(messenger, "iconTestField", vec3_zero, quat_identity, vec3_one*0.1f);
+	SKMath::vec3 pos = vec3_right;
+	SKMath::quat rot = quat_identity;
+	SKMath::vec3 scl = vec3_one*0.1f;
 
-	RegisterInputHandler(messenger, "iconTestHandler", fieldNodePath, "/main", "inputEvent");
+	string modelNodePath = CreateModelFromFile(messenger, "iconTest", argv[1], pos, rot, scl);
+	string fieldNodePath = CreateBoxField(messenger, "iconTestField", pos, rot, scl);
+
+	RegisterInputHandler(messenger, "iconTestHandler", fieldNodePath, pos, rot, "/main", "inputEvent");
 	SubscribeLogicStep(messenger, "/main", "logicStep");
 
 	std::this_thread::sleep_for(std::chrono::seconds(3600));

@@ -65,15 +65,28 @@ inline void SubscribeLogicStep(StardustXR::Messenger &messenger, string localNod
 }
 
 ///////////////////////////////////////////
+// Spatial functions
+
+inline void setSpatialParent(StardustXR::Messenger &messenger, string spacePath, string spaceParentPath) {
+	messenger.sendSignal(
+		spacePath.c_str(),
+		"registerInputHandler",
+		FLEX_ARG(FLEX_STRING(spaceParentPath))
+	);
+}
+
+///////////////////////////////////////////
 // Input functions
 
-inline void RegisterInputHandler(StardustXR::Messenger &messenger, string handlerName, string fieldNodePath, string localNodePath, string localNodeMethod) {
+inline void RegisterInputHandler(StardustXR::Messenger &messenger, string handlerName, string fieldNodePath, vec3 pos, quat rot, string localNodePath, string localNodeMethod) {
 	messenger.sendSignal(
 		"/input",
 		"registerInputHandler",
 		FLEX_ARGS(
 			FLEX_STRING(handlerName)
 			FLEX_STRING(fieldNodePath)
+			FLEX_VEC3(pos)
+			FLEX_QUAT(rot)
 			FLEX_STRING(localNodePath)
 			FLEX_STRING(localNodeMethod)
 		)

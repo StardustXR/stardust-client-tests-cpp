@@ -22,6 +22,13 @@ void PrintInputData(const InputData *inputMethod) {
 			const float tilt = pointer->tilt();
 			printf("\t\ttilt:        %f\n", tilt);
 		} break;
+		case InputDataRaw_Hand: {
+			const Hand *hand = inputMethod->input_as_Hand();
+			printf("\tHand:\n");
+			const vec3 palmPosition = hand->palm()->position();
+			const quat palmRotation = hand->palm()->rotation();
+			printf("\t\tpalm:  (%f, %f, %f), (%f, %f, %f, %f)\n", palmPosition.x(), palmPosition.y(), palmPosition.z(), palmRotation.w(), palmRotation.x(), palmRotation.y(), palmRotation.z());
+		} break;
 		default:
 			break;
 	}
