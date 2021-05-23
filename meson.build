@@ -1,26 +1,50 @@
 project('stardustxr-client-tests', 'cpp', default_options : ['cpp_std=c++11'])
 includes = include_directories('include')
 
-libstardustxr = dependency('stardustxr')
-dependencies = [libstardustxr]
+fusion = dependency('stardustxr-fusion')
+dependencies = [fusion]
 
-executable('create_model',
-	'src/create_model.cpp',
-	link_args: '-lflatbuffers',
+sublibs = []
+
+subdir('src/interaction')
+subdir('src/physics')
+
+executable('axes',
+	'src/axes.cpp',
 	include_directories: includes,
+	link_whole: sublibs,
+	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
 
-executable('fields',
-	'src/fields.cpp',
-	link_args: '-lflatbuffers',
+executable('basicbody',
+	'src/basicbody.cpp',
 	include_directories: includes,
+	link_whole: sublibs,
+	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
 
-executable('input',
-	'src/input.cpp',
-	link_args: '-lflatbuffers',
+executable('forcegrab',
+	'src/forcegrab.cpp',
 	include_directories: includes,
+	link_whole: sublibs,
+	link_args: '-lflatbuffers',
+	dependencies: dependencies,
+)
+
+executable('screen',
+	'src/screen.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	link_args: '-lflatbuffers',
+	dependencies: dependencies,
+)
+
+executable('slider',
+	'src/slider.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
