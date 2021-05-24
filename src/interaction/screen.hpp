@@ -22,5 +22,9 @@ protected:
 	StardustXRFusion::Field *field;
 	StardustXRFusion::InputHandler inputHandler;
 
+	SKMath::vec2 dimensions = {0.7f, 0.404f};
+
+	void setCursor(SKMath::vec2 pos);
+
 	StardustXRFusion::Model domeModel;
 };

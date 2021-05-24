@@ -17,13 +17,16 @@ public:
 	float maxValue;
 
 	void setSliderValue(float value);
+	void setSliderLength(float length);
 
 protected:
 	float length;
 
 	float orbPos = 0.0f;
-
 	void setSliderPos(float pos);
+
+	bool movedBefore;
+	bool doMove;
 
 	StardustXRFusion::Model base;
 	StardustXRFusion::Model base_inv;

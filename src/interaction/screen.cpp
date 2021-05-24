@@ -1,5 +1,7 @@
-#include <math.h>
-#include <functional>
+#include "../../include/math_util.hpp"
+
+//#include <math.h>
+//#include <functional>
 
 #include "screen.hpp"
 
@@ -19,40 +21,48 @@ Screen::Screen(SKMath::vec3 origin, SKMath::quat orientation, std::string modelP
 
 bool Screen::inputEvent(const StardustXR::InputData *inputData) {
 	flexbuffers::Map datamap = inputData->datamap_flexbuffer_root().AsMap();
-	if(inputData->input_type() == StardustXR::InputDataRaw_Hand) {
-//		float pinchStrength = datamap["pinchStrength"].AsFloat();
-//		const StardustXR::Hand *hand = inputData->input_as_Hand();
+	switch(inputData->input_type()) {
+		case StardustXR::InputDataRaw_Hand: {
+			const StardustXR::Hand *hand = inputData->input_as_Hand();
 
-//		vec3 fingerPositions[24];
-//		for(int i=0; i<24; ++i) {
-//			fingerPositions[i] = {
-//				hand->finger_joints()->Get(i)->position().x(),
-//				-hand->finger_joints()->Get(i)->position().y(),
-//				-hand->finger_joints()->Get(i)->position().z()
-//			};
-//		}
-		return true;
-	} else if(inputData->input_type() == StardustXR::InputDataRaw_Pointer) {
-		const StardustXR::Pointer *pointer = inputData->input_as_Pointer();
+			const vec3 indexTipPos = {
+				hand->finger_joints()->Get(8)->position().x(),
+				-hand->finger_joints()->Get(8)->position().y(),
+				-hand->finger_joints()->Get(8)->position().z()
+			};
+			const vec3 thumbTipPos = {
+				hand->finger_joints()->Get(2)->position().x(),
+				-hand->finger_joints()->Get(2)->position().y(),
+				-hand->finger_joints()->Get(2)->position().z()
+			};
+			const vec3 pinchPos = (indexTipPos + thumbTipPos) * 0.5f;
 
-		vec3 pointerDir = {
-			pointer->direction()->x(),
-			pointer->direction()->y(),
-			pointer->direction()->z()
-		};
-		vec3 pointerOrigin = {
-			pointer->origin()->x(),
-			pointer->origin()->y(),
-			pointer->origin()->z()
-		};
+			setCursor({pinchPos.x, pinchPos.y});
+		} return true;
+		case StardustXR::InputDataRaw_Pointer: {
+			const StardustXR::Pointer *pointer = inputData->input_as_Pointer();
+			vec3 pointerDir = {
+				pointer->direction()->x(),
+				pointer->direction()->y(),
+				pointer->direction()->z()
+			};
+			vec3 pointerOrigin = {
+				pointer->origin()->x(),
+				pointer->origin()->y(),
+				pointer->origin()->z()
+			};
+			float deepestPointDistance = datamap["deepestPointDistance"].AsFloat();
+			vec3 deepestPoint = pointerOrigin + (vec3_normalize(pointerDir) * deepestPointDistance);
 
-		float multiplier = pointerOrigin.z / pointerDir.z;
-		vec3 pointerPoint = pointerOrigin - (pointerDir * multiplier);
-		pointerPoint.y = -pointerPoint.y;
-
-		domeModel.setOrigin(pointerPoint + (vec3_forward * 0.02));
-		return true;
-	} else {
-		return false;
+			setCursor({deepestPoint.x, -deepestPoint.y});
+		} return true;
+		default: return false;
 	}
+}
+
+void Screen::setCursor(SKMath::vec2 pos) {
+	vec2 cursor;
+	cursor.x = clamp(pos.x, -dimensions.x/2, dimensions.x/2);
+	cursor.y = clamp(pos.y, -dimensions.y/2, dimensions.y/2);
+	domeModel.setOrigin({cursor.x, cursor.y, 0});
 }

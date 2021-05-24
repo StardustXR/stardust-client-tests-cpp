@@ -17,7 +17,7 @@ using namespace SKMath;
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
 
-	BoxField screenField(vec3_zero, quat_identity, {0.7f, 0.4f, 0.04f});
+	BoxField screenField(vec3_zero, quat_identity, {0.7f, 0.4f, 0.01f});
 
 	Screen discordScreen(vec3_zero, quat_from_angles(0, 0, 0), "../res/discord_panel.glb", 1.0f, screenField);
 

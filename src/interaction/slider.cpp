@@ -40,21 +40,40 @@ void Slider::setSliderPos(float pos) {
 	value = map(orbPos, 0, length, minValue, maxValue);
 }
 
+void Slider::setSliderLength(float length) {
+	this->length = length;
+	base_inv.setOrigin({length, 0, 0});
+	setSliderValue(value);
+}
+
 bool Slider::inputEvent(const StardustXR::InputData *inputData) {
 	flexbuffers::Map datamap = inputData->datamap_flexbuffer_root().AsMap();
 	switch(inputData->input_type()) {
 		case StardustXR::InputDataRaw_Hand: {
-			float pinchStrength = datamap["pinchStrength"].AsFloat();
 			const StardustXR::Hand *hand = inputData->input_as_Hand();
 			const float pinchPos = (hand->finger_joints()->Get(2)->position().x() + hand->finger_joints()->Get(8)->position().x()) * 0.5f;
+			float pinchStrength = datamap["pinchStrength"].AsFloat();
+			bool move = pinchStrength > 0.9f;
 
-			if(pinchStrength > 0.9f)
+			if(move != movedBefore) {
+				doMove = move;
+			}
+
+			movedBefore = move;
+
+			if(move)
 				setSliderPos(pinchPos);
 
 			return true;
 		} break;
 		case StardustXR::InputDataRaw_Pointer: {
 			float select = datamap["select"].AsFloat();
+			if(select < 0.9f) {
+				movedBefore = false;
+				return false;
+			} else if(!movedBefore) {
+				movedBefore = true;
+			}
 			flexbuffers::Vector scroll = datamap["scroll"].AsVector();
 			float scrollY = scroll[1].AsFloat();
 			const StardustXR::Pointer *pointer = inputData->input_as_Pointer();
@@ -78,8 +97,9 @@ bool Slider::inputEvent(const StardustXR::InputData *inputData) {
 
 			return true;
 		} break;
-		default:
-			return false;
+		default: {
+			movedBefore = false;
+		} return false;
 	}
 
 	return false;
