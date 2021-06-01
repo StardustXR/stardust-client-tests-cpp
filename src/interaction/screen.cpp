@@ -21,6 +21,7 @@ Screen::Screen(SKMath::vec3 origin, SKMath::quat orientation, std::string modelP
 
 bool Screen::inputEvent(const StardustXR::InputData *inputData) {
 	flexbuffers::Map datamap = inputData->datamap_flexbuffer_root().AsMap();
+	float distance = inputData->distance();
 	switch(inputData->input_type()) {
 		case StardustXR::InputDataRaw_Hand: {
 			const StardustXR::Hand *hand = inputData->input_as_Hand();
@@ -54,7 +55,17 @@ bool Screen::inputEvent(const StardustXR::InputData *inputData) {
 			float deepestPointDistance = datamap["deepestPointDistance"].AsFloat();
 			vec3 deepestPoint = pointerOrigin + (vec3_normalize(pointerDir) * deepestPointDistance);
 
-			setCursor({deepestPoint.x, -deepestPoint.y});
+			if(abs(deepestPoint.z) > abs(dimensions.z*2)) {
+				domeModel.setScale(vec3_zero);
+				return false;
+			}
+
+			domeModel.setScale(vec3_one * (1.0f - clamp(map(distance, 0, maxDistance, 0, 1), 0, 1)));
+
+			if(pointerOrigin.z > 0 && inputData->distance() < maxDistance)
+				setCursor({deepestPoint.x, -deepestPoint.y});
+			else
+				return false;
 		} return true;
 		default: return false;
 	}

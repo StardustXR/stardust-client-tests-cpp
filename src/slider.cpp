@@ -9,7 +9,7 @@
 using namespace StardustXRFusion;
 using namespace SKMath;
 
-uint sliderCount = 30;
+uint sliderCount = 50;
 float oldSliderSpacing = 0.03f;
 float sliderSpacing = 0.03f;
 float oldSliderHeight = 0.03f;

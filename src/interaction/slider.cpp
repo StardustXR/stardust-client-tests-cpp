@@ -48,18 +48,15 @@ void Slider::setSliderLength(float length) {
 
 bool Slider::inputEvent(const StardustXR::InputData *inputData) {
 	flexbuffers::Map datamap = inputData->datamap_flexbuffer_root().AsMap();
+	float distance = inputData->distance();
+	if(distance > maxDistance)
+		return false;
 	switch(inputData->input_type()) {
 		case StardustXR::InputDataRaw_Hand: {
 			const StardustXR::Hand *hand = inputData->input_as_Hand();
 			const float pinchPos = (hand->finger_joints()->Get(2)->position().x() + hand->finger_joints()->Get(8)->position().x()) * 0.5f;
 			float pinchStrength = datamap["pinchStrength"].AsFloat();
 			bool move = pinchStrength > 0.9f;
-
-			if(move != movedBefore) {
-				doMove = move;
-			}
-
-			movedBefore = move;
 
 			if(move)
 				setSliderPos(pinchPos);

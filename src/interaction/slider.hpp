@@ -12,6 +12,8 @@ public:
 	explicit Slider(float length, float minValue, float maxValue);
 	~Slider();
 
+	float maxDistance = 0.0254f;
+
 	float value = 0.0f;
 	float minValue;
 	float maxValue;
