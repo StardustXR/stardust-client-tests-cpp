@@ -39,3 +39,7 @@
 build/
 
 b/
+
+.cache/
+
+.vscode/
