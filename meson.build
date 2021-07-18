@@ -33,6 +33,14 @@ executable('forcegrab',
 	dependencies: dependencies,
 )
 
+executable('patternlock',
+	'src/patternlock.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	link_args: '-lflatbuffers',
+	dependencies: dependencies,
+)
+
 executable('screen',
 	'src/screen.cpp',
 	include_directories: includes,

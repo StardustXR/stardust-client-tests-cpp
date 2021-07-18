@@ -42,6 +42,7 @@ void Slider::setSliderPos(float pos) {
 
 void Slider::setSliderLength(float length) {
 	this->length = length;
+	field.setSize({length, 0.004, 0.004});
 	base_inv.setOrigin({length, 0, 0});
 	setSliderValue(value);
 }
