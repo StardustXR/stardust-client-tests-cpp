@@ -3,6 +3,7 @@
 #include <thread>
 
 #include "interaction/slider.hpp"
+#include "CLI11.hpp"
 
 #include <stardustxr/fusion/fusion.hpp>
 
@@ -15,7 +16,21 @@ float sliderSpacing = 0.03f;
 float oldSliderHeight = 0.03f;
 float sliderHeight = 0.5f;
 
-int main(int, char *[]) {
+int parseArgs(int argc, const char* const argv[]) {
+	CLI::App app("Stardust XR Slider Demo");
+	app.add_option<uint>("-n", sliderCount, "Number of sliders to create");
+	try {
+		(app).parse((argc), (argv));
+	} catch(const CLI::ParseError &e) {
+		return (app).exit(e);
+	}
+	return -1;
+}
+
+int main(int argc, const char* const argv[]) {
+	int parse_result = parseArgs(argc, argv);
+	if (parse_result != -1) return parse_result;
+
 	StardustXRFusion::Setup();
 
 	Spatial root = Spatial::create(vec3_forward * 0.5f, quat_identity);

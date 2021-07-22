@@ -42,7 +42,10 @@ void Slider::setSliderPos(float pos) {
 
 void Slider::setSliderLength(float length) {
 	this->length = length;
+	
+	field.setOrigin(vec3_right * (length / 2));
 	field.setSize({length, 0.004, 0.004});
+
 	base_inv.setOrigin({length, 0, 0});
 	setSliderValue(value);
 }
