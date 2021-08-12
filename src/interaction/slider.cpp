@@ -1,17 +1,20 @@
 #include "slider.hpp"
 #include "../../include/math_util.hpp"
 #include <algorithm>
+#include <stardustxr/fusion/sk_math.hpp>
 
 using namespace StardustXRFusion;
 using namespace SKMath;
 
-Slider::Slider(float length, float minValue, float maxValue) :
+Slider::Slider(float length, float minValue, float maxValue, SKMath::color color) :
 	Spatial(Spatial::create()),
-	base("../res/slider/base.glb", vec3_zero, quat_identity, {length, 1, 1}),
-	base_inv("../res/slider/base_inv.glb", {length, 0, 0}, quat_identity, {0, 1, 1}),
+	base("../res/slider/base.glb", vec3_zero, quat_from_angles(0, 180, 0), {0, 1, 1}),
+	base_inv("../res/slider/base.glb", {length, 0, 0}, quat_identity, {length, 1, 1}),
 	orb("../res/slider/orb.glb"),
 	field(vec3_right * (length / 2), quat_identity, {length, 0.004, 0.004}),
 	handler(nullptr, field, vec3_zero, quat_identity, std::bind(&Slider::inputEvent, this, std::placeholders::_1)) {
+
+	base.setMaterialProperty(0, "color", color);
 
 	this->minValue = minValue;
 	this->maxValue = maxValue;

@@ -5,8 +5,9 @@
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 #include <stardustxr/fusion/types/fields/spherefield.hpp>
+#include <stardustxr/fusion/types/spatial.hpp>
 
-class ExclusivePinch {
+class ExclusivePinch : public StardustXRFusion::Spatial {
 public:
 	explicit ExclusivePinch(SKMath::vec3 position);
 	~ExclusivePinch();

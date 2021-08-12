@@ -25,6 +25,22 @@ executable('basicbody',
 	dependencies: dependencies,
 )
 
+executable('environmentitem',
+	'src/environmentitem.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	link_args: '-lflatbuffers',
+	dependencies: dependencies,
+)
+
+executable('floor',
+	'src/floor.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	link_args: '-lflatbuffers',
+	dependencies: dependencies,
+)
+
 executable('forcegrab',
 	'src/forcegrab.cpp',
 	include_directories: includes,

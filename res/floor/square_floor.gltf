@@ -1,0 +1,156 @@
+{
+  "asset": {
+    "generator": "Khronos glTF Blender I/O v1.6.16",
+    "version": "2.0"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "sphere_gltf"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "square_floor",
+      "normalTexture": {
+        "index": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0,
+        "metallicRoughnessTexture": {
+          "index": 2
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Sphere.001",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ],
+  "images": [
+    {
+      "mimeType": "image/jpeg",
+      "name": "square_floor_nor_gl_4k",
+      "uri": "textures/square_floor_nor_gl_1k.jpg"
+    },
+    {
+      "mimeType": "image/jpeg",
+      "name": "square_floor_diff_4k",
+      "uri": "textures/square_floor_diff_1k.jpg"
+    },
+    {
+      "mimeType": "image/jpeg",
+      "name": "square_floor_rough_4k",
+      "uri": "textures/square_floor_rough_1k.jpg"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 53893,
+      "max": [
+        1.001059889793396,
+        1.0023176670074463,
+        1.0022891759872437
+      ],
+      "min": [
+        -1.0010600090026855,
+        -1.002801537513733,
+        -1.00229012966156
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 53893,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 53893,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5123,
+      "count": 322170,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 646716,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 646716,
+      "byteOffset": 646716
+    },
+    {
+      "buffer": 0,
+      "byteLength": 431144,
+      "byteOffset": 1293432
+    },
+    {
+      "buffer": 0,
+      "byteLength": 644340,
+      "byteOffset": 1724576
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 2368916,
+      "uri": "square_floor.bin"
+    }
+  ]
+}

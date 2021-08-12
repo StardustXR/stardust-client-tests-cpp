@@ -2,6 +2,7 @@
 
 #include <flatbuffers/flexbuffers.h>
 
+#include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/model.hpp>
 #include <stardustxr/fusion/types/spatial.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
@@ -9,7 +10,7 @@
 
 class Slider : public StardustXRFusion::Spatial {
 public:
-	explicit Slider(float length, float minValue, float maxValue);
+	explicit Slider(float length, float minValue, float maxValue, SKMath::color color = SKMath::color{0,0,0.75f,1});
 	~Slider();
 
 	float maxDistance = 0.0254f;
