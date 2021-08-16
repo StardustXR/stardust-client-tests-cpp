@@ -61,14 +61,15 @@ void Slider::setSliderLength(float length) {
 
 
 bool Slider::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
-	if(hand.distance > maxDistance)
-		return false;
 	const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
+	const SKMath::vec3 pinchPosZY = {0, pinchPos.y, pinchPos.z};
+	if(SKMath::vec3_magnitude(pinchPosZY) > maxDistance)
+		return false;
 	const float pinchStrength = datamap.getFloat("pinchStrength");
 	const bool move = pinchStrength > 0.9f;
 	if(move)
 		setSliderPos(pinchPos.x);
-	return move;
+	return SKMath::vec3_magnitude(pinchPosZY) < maxDistance;
 }
 bool Slider::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
 	if(pointer.distance > maxDistance)

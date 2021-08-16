@@ -37,19 +37,12 @@ executable('floor',
 	dependencies: dependencies,
 )
 
-# executable('forcegrab',
-# 	'src/forcegrab.cpp',
-# 	include_directories: includes,
-# 	link_whole: sublibs,
-# 	dependencies: dependencies,
-# )
-
-# executable('patternlock',
-# 	'src/patternlock.cpp',
-# 	include_directories: includes,
-# 	link_whole: sublibs,
-# 	dependencies: dependencies,
-# )
+executable('patternlock',
+	'src/patternlock.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	dependencies: dependencies,
+)
 
 executable('screen',
 	'src/screen.cpp',
