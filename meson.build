@@ -13,7 +13,6 @@ executable('axes',
 	'src/axes.cpp',
 	include_directories: includes,
 	link_whole: sublibs,
-	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
 
@@ -21,7 +20,6 @@ executable('basicbody',
 	'src/basicbody.cpp',
 	include_directories: includes,
 	link_whole: sublibs,
-	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
 
@@ -29,7 +27,6 @@ executable('environmentitem',
 	'src/environmentitem.cpp',
 	include_directories: includes,
 	link_whole: sublibs,
-	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
 
@@ -37,31 +34,27 @@ executable('floor',
 	'src/floor.cpp',
 	include_directories: includes,
 	link_whole: sublibs,
-	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
 
-executable('forcegrab',
-	'src/forcegrab.cpp',
-	include_directories: includes,
-	link_whole: sublibs,
-	link_args: '-lflatbuffers',
-	dependencies: dependencies,
-)
+# executable('forcegrab',
+# 	'src/forcegrab.cpp',
+# 	include_directories: includes,
+# 	link_whole: sublibs,
+# 	dependencies: dependencies,
+# )
 
-executable('patternlock',
-	'src/patternlock.cpp',
-	include_directories: includes,
-	link_whole: sublibs,
-	link_args: '-lflatbuffers',
-	dependencies: dependencies,
-)
+# executable('patternlock',
+# 	'src/patternlock.cpp',
+# 	include_directories: includes,
+# 	link_whole: sublibs,
+# 	dependencies: dependencies,
+# )
 
 executable('screen',
 	'src/screen.cpp',
 	include_directories: includes,
 	link_whole: sublibs,
-	link_args: '-lflatbuffers',
 	dependencies: dependencies,
 )
 

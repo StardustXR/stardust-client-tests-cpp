@@ -1,5 +1,9 @@
 #include "../../include/math_util.hpp"
 
+#include <stardustxr/fusion/types/input/datamap.hpp>
+#include <stardustxr/fusion/types/input/types/handinput.hpp>
+#include <stardustxr/fusion/types/input/types/pointerinput.hpp>
+
 //#include <math.h>
 //#include <functional>
 
@@ -11,64 +15,40 @@ using namespace StardustXRFusion;
 Screen::Screen(SKMath::vec3 origin, SKMath::quat orientation, std::string modelPath, float modelScale, StardustXRFusion::Field &field) :
 		Spatial(Spatial::create(origin, orientation)),
 		model(modelPath, vec3_zero, quat_identity, vec3_one * modelScale),
-		inputHandler(nullptr, field, vec3_zero, quat_identity, std::bind(&Screen::inputEvent, this, std::placeholders::_1)),
+		inputHandler(nullptr, field, vec3_zero, quat_identity),
 		domeModel("../res/touch_dome.glb", vec3_zero, quat_identity, vec3_one) {
+
+	inputHandler.handHandlerMethod = std::bind(&Screen::handInput, this, std::placeholders::_1, std::placeholders::_2);
+	inputHandler.pointerHandlerMethod = std::bind(&Screen::pointerInput, this, std::placeholders::_1, std::placeholders::_2);
+
 	this->field = &field;
 	model.setSpatialParent(this);
 	inputHandler.setSpatialParent(this);
 	domeModel.setSpatialParent(this);
 }
 
-bool Screen::inputEvent(const StardustXR::InputData *inputData) {
-	flexbuffers::Map datamap = inputData->datamap_flexbuffer_root().AsMap();
-	float distance = inputData->distance();
-	switch(inputData->input_type()) {
-		case StardustXR::InputDataRaw_Hand: {
-			const StardustXR::Hand *hand = inputData->input_as_Hand();
+bool Screen::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
+	if(hand.distance > maxDistance)
+		return false;
+	const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
+	setCursor(SKMath::vec2{pinchPos.x, pinchPos.y});
+	return false;
+}
+bool Screen::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
+	if(pointer.distance > maxDistance)
+		return false;
+	const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 
-			const vec3 indexTipPos = {
-				hand->finger_joints()->Get(8)->position().x(),
-				-hand->finger_joints()->Get(8)->position().y(),
-				-hand->finger_joints()->Get(8)->position().z()
-			};
-			const vec3 thumbTipPos = {
-				hand->finger_joints()->Get(2)->position().x(),
-				-hand->finger_joints()->Get(2)->position().y(),
-				-hand->finger_joints()->Get(2)->position().z()
-			};
-			const vec3 pinchPos = (indexTipPos + thumbTipPos) * 0.5f;
-
-			setCursor({pinchPos.x, pinchPos.y});
-		} return true;
-		case StardustXR::InputDataRaw_Pointer: {
-			const StardustXR::Pointer *pointer = inputData->input_as_Pointer();
-			vec3 pointerDir = {
-				pointer->direction()->x(),
-				pointer->direction()->y(),
-				pointer->direction()->z()
-			};
-			vec3 pointerOrigin = {
-				pointer->origin()->x(),
-				pointer->origin()->y(),
-				pointer->origin()->z()
-			};
-			float deepestPointDistance = datamap["deepestPointDistance"].AsFloat();
-			vec3 deepestPoint = pointerOrigin + (vec3_normalize(pointerDir) * deepestPointDistance);
-
-			if(abs(deepestPoint.z) > abs(dimensions.z*2)) {
-				domeModel.setScale(vec3_zero);
-				return false;
-			}
-
-			domeModel.setScale(vec3_one * (1.0f - clamp(map(distance, 0, maxDistance, 0, 1), 0, 1)));
-
-			if(pointerOrigin.z > 0 && inputData->distance() < maxDistance)
-				setCursor({deepestPoint.x, -deepestPoint.y});
-			else
-				return false;
-		} return true;
-		default: return false;
+	if(abs(deepestPoint.z) > abs(dimensions.z*2)) {
+		domeModel.setScale(vec3_zero);
+		return false;
 	}
+
+	domeModel.setScale(vec3_one * (1.0f - clamp(map(pointer.distance, 0, maxDistance, 0, 1), 0, 1)));
+
+	if(pointer.origin.z > 0 && pointer.distance < maxDistance)
+		setCursor({deepestPoint.x, -deepestPoint.y});
+	return false;
 }
 
 void Screen::setCursor(SKMath::vec2 pos) {

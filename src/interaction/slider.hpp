@@ -6,6 +6,7 @@
 #include <stardustxr/fusion/types/model.hpp>
 #include <stardustxr/fusion/types/spatial.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
+#include <stardustxr/fusion/types/input/datamap.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 
 class Slider : public StardustXRFusion::Spatial {
@@ -35,7 +36,8 @@ protected:
 	StardustXRFusion::Model base_inv;
 	StardustXRFusion::Model orb;
 	StardustXRFusion::BoxField field;
-	StardustXRFusion::InputHandler handler;
+	StardustXRFusion::InputHandler inputHandler;
 
-	bool inputEvent(const StardustXR::InputData *inputData);
+	bool handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
+	bool pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
 };

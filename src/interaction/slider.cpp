@@ -2,6 +2,9 @@
 #include "../../include/math_util.hpp"
 #include <algorithm>
 #include <stardustxr/fusion/sk_math.hpp>
+#include <stardustxr/fusion/types/input/datamap.hpp>
+#include <stardustxr/fusion/types/input/types/handinput.hpp>
+#include <stardustxr/fusion/types/input/types/pointerinput.hpp>
 
 using namespace StardustXRFusion;
 using namespace SKMath;
@@ -12,7 +15,10 @@ Slider::Slider(float length, float minValue, float maxValue, SKMath::color color
 	base_inv("../res/slider/base.glb", {length, 0, 0}, quat_identity, {length, 1, 1}),
 	orb("../res/slider/orb.glb"),
 	field(vec3_right * (length / 2), quat_identity, {length, 0.004, 0.004}),
-	handler(nullptr, field, vec3_zero, quat_identity, std::bind(&Slider::inputEvent, this, std::placeholders::_1)) {
+	inputHandler(nullptr, field, vec3_zero, quat_identity) {
+	
+	inputHandler.handHandlerMethod = std::bind(&Slider::handInput, this, std::placeholders::_1, std::placeholders::_2);
+	inputHandler.pointerHandlerMethod = std::bind(&Slider::pointerInput, this, std::placeholders::_1, std::placeholders::_2);
 
 	base.setMaterialProperty(0, "color", color);
 
@@ -24,7 +30,7 @@ Slider::Slider(float length, float minValue, float maxValue, SKMath::color color
 	base_inv.setSpatialParent(this);
 	orb.setSpatialParent(this);
 	field.setSpatialParent(this);
-	handler.setSpatialParent(this);
+	inputHandler.setSpatialParent(this);
 }
 
 Slider::~Slider() {}
@@ -53,58 +59,66 @@ void Slider::setSliderLength(float length) {
 	setSliderValue(value);
 }
 
-bool Slider::inputEvent(const StardustXR::InputData *inputData) {
-	flexbuffers::Map datamap = inputData->datamap_flexbuffer_root().AsMap();
-	float distance = inputData->distance();
-	if(distance > maxDistance)
+
+bool Slider::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
+	if(hand.distance > maxDistance)
 		return false;
-	switch(inputData->input_type()) {
-		case StardustXR::InputDataRaw_Hand: {
-			const StardustXR::Hand *hand = inputData->input_as_Hand();
-			const float pinchPos = (hand->finger_joints()->Get(2)->position().x() + hand->finger_joints()->Get(8)->position().x()) * 0.5f;
-			float pinchStrength = datamap["pinchStrength"].AsFloat();
-			bool move = pinchStrength > 0.9f;
-
-			if(move)
-				setSliderPos(pinchPos);
-
-			return true;
-		} break;
-		case StardustXR::InputDataRaw_Pointer: {
-			float select = datamap["select"].AsFloat();
-			if(select < 0.9f) {
-				movedBefore = false;
-				return false;
-			} else if(!movedBefore) {
-				movedBefore = true;
-			}
-			flexbuffers::Vector scroll = datamap["scroll"].AsVector();
-			float scrollY = scroll[1].AsFloat();
-			const StardustXR::Pointer *pointer = inputData->input_as_Pointer();
-			vec3 pointerDir = {
-				pointer->direction()->x(),
-				pointer->direction()->y(),
-				pointer->direction()->z()
-			};
-			vec3 pointerOrigin = {
-				pointer->origin()->x(),
-				pointer->origin()->y(),
-				pointer->origin()->z()
-			};
-			float deepestPointDistance = datamap["deepestPointDistance"].AsFloat();
-			vec3 deepestPoint = pointerOrigin + (vec3_normalize(pointerDir) * deepestPointDistance);
-
-			if(select > 0.9f)
-				setSliderPos(deepestPoint.x);
-			else
-				setSliderPos(orbPos+scrollY);
-
-			return true;
-		} break;
-		default: {
-			movedBefore = false;
-		} return false;
+	const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
+	const float pinchStrength = datamap.getFloat("pinchStrength");
+	const bool move = pinchStrength > 0.9f;
+	if(move)
+		setSliderPos(pinchPos.x);
+	return move;
+}
+bool Slider::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
+	if(pointer.distance > maxDistance)
+		return false;
+	const float select = datamap.getFloat("select");
+	const SKMath::vec2 scroll = datamap.getVec2("scroll");
+	const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
+	
+	if(select > 0.9f) {
+		setSliderPos(deepestPoint.x);
+		return true;
+	} else if(scroll.y != 0.0f) {
+		setSliderPos(orbPos+scroll.y);
+		return true;
 	}
-
 	return false;
 }
+
+// bool Slider::inputEvent(const StardustXR::InputData *inputData) {
+// 		case StardustXR::InputDataRaw_Pointer: {
+// 			float select = datamap["select"].AsFloat();
+// 			if(select < 0.9f) {
+// 				movedBefore = false;
+// 				return false;
+// 			} else if(!movedBefore) {
+// 				movedBefore = true;
+// 			}
+// 			flexbuffers::Vector scroll = datamap["scroll"].AsVector();
+// 			float scrollY = scroll[1].AsFloat();
+// 			const StardustXR::Pointer *pointer = inputData->input_as_Pointer();
+// 			vec3 pointerDir = {
+// 				pointer->direction()->x(),
+// 				pointer->direction()->y(),
+// 				pointer->direction()->z()
+// 			};
+// 			vec3 pointerOrigin = {
+// 				pointer->origin()->x(),
+// 				pointer->origin()->y(),
+// 				pointer->origin()->z()
+// 			};
+// 			float deepestPointDistance = datamap["deepestPointDistance"].AsFloat();
+// 			vec3 deepestPoint = pointerOrigin + (vec3_normalize(pointerDir) * deepestPointDistance);
+
+
+// 			return true;
+// 		} break;
+// 		default: {
+// 			movedBefore = false;
+// 		} return false;
+// 	}
+
+// 	return false;
+// }
