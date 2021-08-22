@@ -35,6 +35,14 @@ Slider::Slider(float length, float minValue, float maxValue, SKMath::color color
 
 Slider::~Slider() {}
 
+void Slider::update() {
+	xInteract.update();
+}
+
+bool Slider::isActive() {
+	return xInteract.isActive() || scroll != 0.0f;
+}
+
 void Slider::setSliderValue(float value) {
 	float sliderPos = map(value, minValue, maxValue, 0, length);
 	setSliderPos(sliderPos);
@@ -59,67 +67,32 @@ void Slider::setSliderLength(float length) {
 	setSliderValue(value);
 }
 
-
 bool Slider::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 	const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
 	const SKMath::vec3 pinchPosZY = {0, pinchPos.y, pinchPos.z};
 	if(SKMath::vec3_magnitude(pinchPosZY) > maxDistance)
 		return false;
 	const float pinchStrength = datamap.getFloat("pinchStrength");
-	const bool move = pinchStrength > 0.9f;
-	if(move)
+	xInteract.input(pinchStrength > 0.9f);
+	if(xInteract.isActive())
 		setSliderPos(pinchPos.x);
-	return SKMath::vec3_magnitude(pinchPosZY) < maxDistance;
+	return xInteract.isActive();
 }
 bool Slider::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
 	if(pointer.distance > maxDistance)
 		return false;
 	const float select = datamap.getFloat("select");
 	const SKMath::vec2 scroll = datamap.getVec2("scroll");
+	xInteract.input(select > 0.9f);
 	const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 	
-	if(select > 0.9f) {
+	if(xInteract.isActive()) {
 		setSliderPos(deepestPoint.x);
 		return true;
 	} else if(scroll.y != 0.0f) {
-		setSliderPos(orbPos+scroll.y);
+		this->scroll = scroll.y;
+		setSliderValue(value+map(scroll.y, 0, 1000, 0, maxValue-minValue));
 		return true;
 	}
 	return false;
 }
-
-// bool Slider::inputEvent(const StardustXR::InputData *inputData) {
-// 		case StardustXR::InputDataRaw_Pointer: {
-// 			float select = datamap["select"].AsFloat();
-// 			if(select < 0.9f) {
-// 				movedBefore = false;
-// 				return false;
-// 			} else if(!movedBefore) {
-// 				movedBefore = true;
-// 			}
-// 			flexbuffers::Vector scroll = datamap["scroll"].AsVector();
-// 			float scrollY = scroll[1].AsFloat();
-// 			const StardustXR::Pointer *pointer = inputData->input_as_Pointer();
-// 			vec3 pointerDir = {
-// 				pointer->direction()->x(),
-// 				pointer->direction()->y(),
-// 				pointer->direction()->z()
-// 			};
-// 			vec3 pointerOrigin = {
-// 				pointer->origin()->x(),
-// 				pointer->origin()->y(),
-// 				pointer->origin()->z()
-// 			};
-// 			float deepestPointDistance = datamap["deepestPointDistance"].AsFloat();
-// 			vec3 deepestPoint = pointerOrigin + (vec3_normalize(pointerDir) * deepestPointDistance);
-
-
-// 			return true;
-// 		} break;
-// 		default: {
-// 			movedBefore = false;
-// 		} return false;
-// 	}
-
-// 	return false;
-// }

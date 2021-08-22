@@ -36,13 +36,21 @@ int main(int, char *[]) {
 	b.setSpatialParent(&root);
 	b.move(vec3_up * (HEIGHT));
 
+	color oldColor = color{0.0f, 0.0f, 0.0f, 1.0f};
+
 	LifeCycle()->onLogicStep([&](double, double) {
-		floor.setMaterialProperty(0, "color", color{
+		r.update();
+		g.update();
+		b.update();
+		color newColor = color{
 			r.value,
 			g.value,
 			b.value,
 			1.0f
-		});
+		};
+		if(newColor != oldColor)
+			floor.setMaterialProperty(0, "color", newColor);
+		oldColor = newColor;
 	});
 
 	std::this_thread::sleep_for(std::chrono::seconds(3600));

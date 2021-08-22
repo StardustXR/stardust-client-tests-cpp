@@ -27,9 +27,14 @@ Screen::Screen(SKMath::vec3 origin, SKMath::quat orientation, std::string modelP
 	domeModel.setSpatialParent(this);
 }
 
+void Screen::update() {
+	xInteract.update();
+}
+
 bool Screen::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 	if(hand.distance > maxDistance)
 		return false;
+	xInteract.input(false);
 	const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
 	setCursor(SKMath::vec2{pinchPos.x, pinchPos.y});
 	return false;
@@ -37,6 +42,7 @@ bool Screen::handInput(const StardustXRFusion::HandInput &hand, const StardustXR
 bool Screen::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
 	if(pointer.distance > maxDistance)
 		return false;
+	xInteract.input(false);
 	const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 
 	if(abs(deepestPoint.z) > abs(dimensions.z*2)) {

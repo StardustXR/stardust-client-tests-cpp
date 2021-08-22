@@ -9,10 +9,15 @@
 #include <stardustxr/fusion/types/input/datamap.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 
+#include "xinteract.hpp"
+
 class Slider : public StardustXRFusion::Spatial {
 public:
 	explicit Slider(float length, float minValue, float maxValue, SKMath::color color = SKMath::color{0,0,0.75f,1});
 	~Slider();
+
+	void update();
+	bool isActive();
 
 	float maxDistance = 0.0254f;
 
@@ -29,8 +34,8 @@ protected:
 	float orbPos = 0.0f;
 	void setSliderPos(float pos);
 
-	bool movedBefore;
-	bool doMove;
+	XInteract xInteract;
+	float scroll;
 
 	StardustXRFusion::Model base;
 	StardustXRFusion::Model base_inv;

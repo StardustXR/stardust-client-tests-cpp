@@ -11,9 +11,7 @@ using namespace StardustXRFusion;
 using namespace SKMath;
 
 uint sliderCount = 50;
-float oldSliderSpacing = 0.03f;
 float sliderSpacing = 0.03f;
-float oldSliderHeight = 0.03f;
 float sliderHeight = 0.5f;
 
 int parseArgs(int argc, const char* const argv[]) {
@@ -34,14 +32,14 @@ int main(int argc, const char* const argv[]) {
 	StardustXRFusion::Setup();
 
 	Spatial root = Spatial::create(vec3_forward * 0.5f, quat_identity);
-	root.setOrientation(quat_from_angles(180, 180, 0));
+	// root.setOrientation(quat_from_angles(180, 180, 0));
 
 	Slider *eqSliders[sliderCount];
 	for(uint i=0; i<sliderCount; ++i) {
 		eqSliders[i] = new Slider(sliderHeight, 0, 1);
 		eqSliders[i]->setSpatialParent(&root);
 		eqSliders[i]->setOrigin({i*sliderSpacing, sliderSpacing, 0});
-		eqSliders[i]->setOrientation(quat_from_angles(90, 0, 0));
+		eqSliders[i]->setOrientation(quat_from_angles(0, 0, 90));
 		eqSliders[i]->setSliderValue(0.5f);
 	}
 
@@ -55,23 +53,24 @@ int main(int argc, const char* const argv[]) {
 	sliderHeightSlider.setSliderValue(sliderHeight);
 
 	LifeCycle()->onLogicStep([&](double, double) {
-		sliderSpacing = sliderSpacingSlider.value;
-		if(oldSliderSpacing != sliderSpacing) {
+		sliderHeightSlider.update();
+		sliderSpacingSlider.update();
+		for(uint i=0; i<sliderCount; ++i) {
+			eqSliders[i]->update();
+		}
+		if(sliderSpacingSlider.isActive()) {
+			const float sliderSpacing = sliderSpacingSlider.value;
 			for(uint i=0; i<sliderCount; ++i) {
 				eqSliders[i]->setOrigin({i*sliderSpacing, sliderSpacing, 0});
 			}
 
 			sliderHeightSlider.setOrigin({0, -sliderSpacing, 0});
 		}
-		sliderHeight = sliderHeightSlider.value;
-		if(oldSliderHeight != sliderHeight) {
+		if(sliderHeightSlider.isActive()) {
 			for(uint i=0; i<sliderCount; ++i) {
-				eqSliders[i]->setSliderLength(sliderHeight);
+				eqSliders[i]->setSliderLength(sliderHeightSlider.value);
 			}
 		}
-
-		oldSliderSpacing = sliderSpacing;
-		oldSliderHeight = sliderHeight;
 	});
 
 	std::this_thread::sleep_for(std::chrono::seconds(3600));

@@ -55,6 +55,12 @@ executable('slider',
 	'src/slider.cpp',
 	include_directories: includes,
 	link_whole: sublibs,
-	link_args: '-lflatbuffers',
+	dependencies: dependencies,
+)
+
+executable('xinteract',
+	'src/xinteract.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
 	dependencies: dependencies,
 )

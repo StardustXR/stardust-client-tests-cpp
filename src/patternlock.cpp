@@ -3,7 +3,6 @@
 #include <thread>
 #include <vector>
 
-#include <flatbuffers/flexbuffers.h>
 #include "../include/math_util.hpp"
 
 #include <stardustxr/fusion/fusion.hpp>

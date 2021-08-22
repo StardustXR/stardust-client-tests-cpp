@@ -6,14 +6,17 @@
 #include <stardustxr/fusion/types/fields/field.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 
-#include "../physics/physicsbody.hpp"
+#include "xinteract.hpp"
 
 class Screen : public StardustXRFusion::Spatial {
 public:
 	explicit Screen(SKMath::vec3 origin, SKMath::quat orientation, std::string modelPath, float modelScale, StardustXRFusion::Field &field);
 
+	void update();
+
 	float maxDistance = 0.0254f;
 protected:
+	XInteract xInteract;
 	bool handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
 	bool pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
 
