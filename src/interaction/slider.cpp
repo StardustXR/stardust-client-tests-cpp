@@ -9,12 +9,12 @@
 using namespace StardustXRFusion;
 using namespace SKMath;
 
-Slider::Slider(float length, float minValue, float maxValue, SKMath::color color) :
+Slider::Slider(float length, float minValue, float maxValue, float barThickness, float orbDiameter, SKMath::color color) :
 	Spatial(Spatial::create()),
-	base("../res/slider/base.glb", vec3_zero, quat_from_angles(0, 180, 0), {0, 1, 1}),
-	base_inv("../res/slider/base.glb", {length, 0, 0}, quat_identity, {length, 1, 1}),
-	orb("../res/slider/orb.glb"),
-	field(vec3_right * (length / 2), quat_identity, {length, 0.004, 0.004}),
+	base("../res/slider/base.glb", vec3_zero, quat_from_angles(0, 180, 0), {0, barThickness, barThickness}),
+	base_inv("../res/slider/base.glb", {length, 0, 0}, quat_identity, {length, barThickness, barThickness}),
+	orb("../res/slider/orb.glb", vec3_zero, quat_identity, vec3_one * orbDiameter),
+	field(vec3_right * (length / 2), quat_identity, {length, barThickness, barThickness}),
 	inputHandler(nullptr, field, vec3_zero, quat_identity) {
 	
 	inputHandler.handHandlerMethod = std::bind(&Slider::handInput, this, std::placeholders::_1, std::placeholders::_2);
@@ -25,6 +25,8 @@ Slider::Slider(float length, float minValue, float maxValue, SKMath::color color
 	this->minValue = minValue;
 	this->maxValue = maxValue;
 	this->length = length;
+	this->barThickness = barThickness;
+	this->orbDiameter = orbDiameter;
 
 	base.setSpatialParent(this);
 	base_inv.setSpatialParent(this);
@@ -37,10 +39,15 @@ Slider::~Slider() {}
 
 void Slider::update() {
 	xInteract.update();
+	xActive.update();
 }
 
 bool Slider::isActive() {
-	return xInteract.isActive() || scroll != 0.0f;
+	return xActive.isActive();
+}
+
+bool Slider::activeChanged() {
+	return xActive.hasActiveChanged();
 }
 
 void Slider::setSliderValue(float value) {
@@ -51,8 +58,8 @@ void Slider::setSliderValue(float value) {
 void Slider::setSliderPos(float pos) {
 	orbPos = clamp(pos, 0, length);
 	orb.setOrigin({orbPos, 0, 0});
-	base.setScale({orbPos, 1, 1});
-	base_inv.setScale({length - orbPos, 1, 1});
+	base.setScale({orbPos, barThickness, barThickness});
+	base_inv.setScale({length - orbPos, barThickness, barThickness});
 
 	value = map(orbPos, 0, length, minValue, maxValue);
 }
@@ -61,30 +68,32 @@ void Slider::setSliderLength(float length) {
 	this->length = length;
 	
 	field.setOrigin(vec3_right * (length / 2));
-	field.setSize({length, 0.004, 0.004});
+	field.setSize({length, barThickness, barThickness});
 
 	base_inv.setOrigin({length, 0, 0});
 	setSliderValue(value);
 }
 
 bool Slider::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
-	const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
-	const SKMath::vec3 pinchPosZY = {0, pinchPos.y, pinchPos.z};
-	if(SKMath::vec3_magnitude(pinchPosZY) > maxDistance)
+	const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
+	field.distance(&inputHandler, pinchPos, [&](float distance) { pinchDistance = distance; });
+	if(!xInteract.isActive() && pinchDistance > maxDistance)
 		return false;
 	const float pinchStrength = datamap.getFloat("pinchStrength");
 	xInteract.input(pinchStrength > 0.9f);
+	xActive.input(xInteract.isActive());
 	if(xInteract.isActive())
 		setSliderPos(pinchPos.x);
 	return xInteract.isActive();
 }
 bool Slider::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
-	if(pointer.distance > maxDistance)
+	if(!xInteract.isActive() && pointer.distance > maxDistance)
 		return false;
 	const float select = datamap.getFloat("select");
-	const SKMath::vec2 scroll = datamap.getVec2("scroll");
+	const vec2 scroll = datamap.getVec2("scroll");
 	xInteract.input(select > 0.9f);
-	const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
+	xActive.input(xInteract.isActive() || scroll.y != 0);
+	const vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 	
 	if(xInteract.isActive()) {
 		setSliderPos(deepestPoint.x);

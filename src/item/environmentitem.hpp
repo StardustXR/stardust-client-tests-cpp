@@ -1,0 +1,15 @@
+#pragma once
+
+#include "item.hpp"
+#include <stardustxr/fusion/sk_math.hpp>
+#include <stardustxr/fusion/types/fields/spherefield.hpp>
+#include <stardustxr/fusion/types/model.hpp>
+
+class EnvironmentItem : public Item {
+public:
+	explicit EnvironmentItem(std::string environment, SKMath::vec3 origin, SKMath::quat orientation = SKMath::quat_identity, float size = 0.07);
+
+	StardustXRFusion::SphereField field;
+protected:
+	StardustXRFusion::Model model;
+};

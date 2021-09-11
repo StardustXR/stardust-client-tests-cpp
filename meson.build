@@ -1,12 +1,16 @@
-project('stardustxr-client-tests', 'cpp', default_options : ['cpp_std=c++11'])
+project('stardustxr-client-tests', 'cpp', default_options : ['cpp_std=c++17'])
 includes = include_directories('include')
 
 fusion = dependency('stardustxr-fusion')
+dbus = dependency('sdbus-c++')
+
 dependencies = [fusion]
 
 sublibs = []
 
+subdir('src/dbus')
 subdir('src/interaction')
+subdir('src/item')
 subdir('src/physics')
 
 executable('axes',
@@ -35,6 +39,16 @@ executable('floor',
 	include_directories: includes,
 	link_whole: sublibs,
 	dependencies: dependencies,
+)
+
+executable('mediaplayer',
+	'src/mediaplayer.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	dependencies: [
+		dependencies,
+		dbus,
+	],
 )
 
 executable('patternlock',

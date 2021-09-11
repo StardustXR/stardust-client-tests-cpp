@@ -13,7 +13,7 @@ using namespace StardustXRFusion;
 using namespace SKMath;
 
 #define SCALE 1000.0f
-#define SLIDER_SPACING 0.03f
+#define SLIDER_SPACING 0.02f
 #define HEIGHT 1.65f
 
 int main(int, char *[]) {
@@ -25,9 +25,9 @@ int main(int, char *[]) {
 	floor.setMaterialProperty(0, "tex_scale", SCALE);
 	floor.setSpatialParent(&root);
 
-	Slider r(0.25f, 0, 1, color{1, 0, 0, 1});
-	Slider g(0.25f, 0, 1, color{0, 1, 0, 1});
-	Slider b(0.25f, 0, 1, color{0, 0, 1, 1});
+	Slider r(0.1f, 0, 1, .002f, .015f, color{1, 0, 0, 1});
+	Slider g(0.1f, 0, 1, .002f, .015f, color{0, 1, 0, 1});
+	Slider b(0.1f, 0, 1, .002f, .015f, color{0, 0, 1, 1});
 
 	r.setSpatialParent(&root);
 	r.move(vec3_up * (HEIGHT+SLIDER_SPACING+SLIDER_SPACING));

@@ -3,6 +3,7 @@ interaction_includes = include_directories('.')
 lib_interaction = static_library(
 	'interaction',
 	files(
+		'button.cpp',
 		'grabbable.cpp',
 		'screen.cpp',
 		'slider.cpp',

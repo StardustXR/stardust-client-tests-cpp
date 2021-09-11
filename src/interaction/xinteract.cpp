@@ -24,7 +24,7 @@ void XInteract::input(bool active) {
 	if(activeFirstFrame && !active)
 		activeFirstFrame = false;
 	activeChanged = this->active != oldActive;
-	oldActive = isActive();
+	oldActive = active;
 }
 
 bool XInteract::isActive() {
