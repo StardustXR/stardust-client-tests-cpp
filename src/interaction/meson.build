@@ -5,6 +5,7 @@ lib_interaction = static_library(
 	files(
 		'button.cpp',
 		'grabbable.cpp',
+		'mediaplayer.cpp',
 		'screen.cpp',
 		'slider.cpp',
 		'xinteract.cpp',

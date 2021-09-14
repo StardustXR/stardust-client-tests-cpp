@@ -53,7 +53,7 @@ bool Screen::pointerInput(const StardustXRFusion::PointerInput &pointer, const S
 	domeModel.setScale(vec3_one * (1.0f - clamp(map(pointer.distance, 0, maxDistance, 0, 1), 0, 1)));
 
 	if(pointer.origin.z > 0 && pointer.distance < maxDistance)
-		setCursor({deepestPoint.x, -deepestPoint.y});
+		setCursor({deepestPoint.x, deepestPoint.y});
 	return false;
 }
 

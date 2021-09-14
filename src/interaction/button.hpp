@@ -1,5 +1,6 @@
 #pragma once
 
+#include "xinteract.hpp"
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 #include <stardustxr/fusion/types/fields/field.hpp>
 
@@ -10,6 +11,7 @@ public:
 	float indexCurlThreshold = 0.9;
 
 protected:
+	XInteract xInteract;
 	bool handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
 	bool pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
 };
