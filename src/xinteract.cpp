@@ -1,14 +1,8 @@
-#include <chrono>
-#include <cstdio>
-#include <iostream>
-#include <stardustxr/fusion/sk_math.hpp>
-#include <stardustxr/fusion/types/fields/boxfield.hpp>
-#include <thread>
 #include <vector>
 
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/types/model.hpp>
-#include <stardustxr/fusion/types/fields/spherefield.hpp>
+#include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 #include <stardustxr/fusion/types/input/types/handinput.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
@@ -45,6 +39,5 @@ int main(int, char *[]) {
 		xInteract.update();
 		fflush(stdout);
 	});
-
-	std::this_thread::sleep_for(std::chrono::seconds(3600));
+	StardustXRFusion::ShutdownAfterInput();
 }

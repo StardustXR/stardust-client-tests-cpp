@@ -1,6 +1,4 @@
 #include <chrono>
-#include <iostream>
-#include <thread>
 
 #include "interaction/slider.hpp"
 #include "CLI11.hpp"
@@ -72,6 +70,5 @@ int main(int argc, const char* const argv[]) {
 			}
 		}
 	});
-
-	std::this_thread::sleep_for(std::chrono::seconds(3600));
+	StardustXRFusion::ShutdownAfterInput();
 }

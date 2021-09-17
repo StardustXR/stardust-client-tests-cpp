@@ -108,6 +108,5 @@ int main(int, char *[]) {
 // 		}
 // 	});
 
-
-	std::this_thread::sleep_for(std::chrono::seconds(3600));
+	StardustXRFusion::ShutdownAfterInput();
 }

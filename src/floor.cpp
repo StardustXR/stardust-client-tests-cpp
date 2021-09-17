@@ -1,8 +1,5 @@
-#include <chrono>
-#include <iostream>
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/spatial.hpp>
-#include <thread>
 
 #include "interaction/slider.hpp"
 
@@ -52,6 +49,5 @@ int main(int, char *[]) {
 			floor.setMaterialProperty(0, "color", newColor);
 		oldColor = newColor;
 	});
-
-	std::this_thread::sleep_for(std::chrono::seconds(3600));
+	StardustXRFusion::ShutdownAfterInput();
 }

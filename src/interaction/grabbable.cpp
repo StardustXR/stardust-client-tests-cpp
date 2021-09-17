@@ -88,8 +88,8 @@ bool Grabbable::pointerInput(const StardustXRFusion::PointerInput &pointer, cons
 	});
 	if(pointDistance > maxDistance && !xInteract.isActive())
 		return false;
-	const float select = datamap.getFloat("select");
-	xInteract.input(select > 0.9f);
+	const float context = datamap.getFloat("context");
+	xInteract.input(context > 0.9f);
 
 	if(xInteract.isActive()) {
 		matrix pointMat = matrix_trs(pointer.origin, quat_lookat(vec3_zero, pointer.direction), vec3_one);

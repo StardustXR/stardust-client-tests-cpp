@@ -1,7 +1,3 @@
-#include <chrono>
-#include <iostream>
-#include <thread>
-
 #include "item/environmentitem.hpp"
 #include "item/acceptor.hpp"
 
@@ -26,5 +22,5 @@ int main(int, char *[]) {
 		environment.update();
 		// environmentAcceptor.update();
 	});
-	std::this_thread::sleep_for(std::chrono::seconds(3600));
+	StardustXRFusion::ShutdownAfterInput();
 }

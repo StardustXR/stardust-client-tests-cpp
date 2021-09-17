@@ -34,15 +34,10 @@ int main(int, char**) {
 			}
 		}
 	}
-
-	// MediaPlayer mp(*sessionConnection, "org.mpris.MediaPlayer2.Lollypop", -vec3_right * 0.1f);
-
 	LifeCycle()->onLogicStep([&](double delta, double) {
-		// mp.update(delta);
 		for(std::unique_ptr<MediaPlayer> &player : mediaPlayers) {
 			player->update(delta);
 		}
 	});
-
-	std::this_thread::sleep_for(std::chrono::seconds(3600));
+	StardustXRFusion::ShutdownAfterInput();
 }

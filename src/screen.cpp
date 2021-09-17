@@ -1,13 +1,4 @@
-#include <chrono>
-#include <iostream>
-#include <thread>
-
-#include <flatbuffers/flexbuffers.h>
-
-#include <stardustxr/fusion/fusion.hpp>
-#include <stardustxr/fusion/types/model.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
-#include <stardustxr/fusion/types/input/inputhandler.hpp>
 
 #include "interaction/screen.hpp"
 
@@ -23,6 +14,5 @@ int main(int, char *[]) {
 	LifeCycle()->onLogicStep([&](double, double) {
 		discordScreen.update();
 	});
-
-	std::this_thread::sleep_for(std::chrono::seconds(3600));
+	StardustXRFusion::ShutdownAfterInput();
 }
