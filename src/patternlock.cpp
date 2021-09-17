@@ -108,5 +108,5 @@ int main(int, char *[]) {
 // 		}
 // 	});
 
-	StardustXRFusion::ShutdownAfterInput();
+	StardustXRFusion::StallMainThread();
 }

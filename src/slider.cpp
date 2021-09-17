@@ -70,5 +70,5 @@ int main(int argc, const char* const argv[]) {
 			}
 		}
 	});
-	StardustXRFusion::ShutdownAfterInput();
+	StardustXRFusion::StallMainThread();
 }

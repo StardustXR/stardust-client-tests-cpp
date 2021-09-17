@@ -6,5 +6,5 @@ using namespace StardustXRFusion;
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
 	Model objectModel("../res/axes.glb");
-	StardustXRFusion::ShutdownAfterInput();
+	StardustXRFusion::StallMainThread();
 }

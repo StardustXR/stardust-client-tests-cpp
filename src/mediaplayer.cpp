@@ -39,5 +39,5 @@ int main(int, char**) {
 			player->update(delta);
 		}
 	});
-	StardustXRFusion::ShutdownAfterInput();
+	StardustXRFusion::StallMainThread();
 }

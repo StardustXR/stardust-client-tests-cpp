@@ -22,5 +22,5 @@ int main(int, char *[]) {
 		environment.update();
 		// environmentAcceptor.update();
 	});
-	StardustXRFusion::ShutdownAfterInput();
+	StardustXRFusion::StallMainThread();
 }

@@ -14,5 +14,5 @@ int main(int, char *[]) {
 	LifeCycle()->onLogicStep([&](double, double) {
 		discordScreen.update();
 	});
-	StardustXRFusion::ShutdownAfterInput();
+	StardustXRFusion::StallMainThread();
 }
