@@ -1,9 +1,12 @@
 #include "item.hpp"
+#include <stardustxr/fusion/types/spatial.hpp>
 
 using namespace SKMath;
 
 Item::Item(vec3 origin, quat orientation) :
-grabbable(origin, orientation, field) {
+StardustXRFusion::Spatial(nullptr),
+grabbable(origin, orientation, field),
+field(this, SKMath::vec3_zero, SKMath::quat_identity) {
 	this->setSpatialParent(&grabbable);
 }
 

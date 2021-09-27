@@ -12,8 +12,8 @@ using namespace SKMath;
 using namespace StardustXRFusion;
 
 Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, StardustXRFusion::Field &field, float maxDistance) :
-		Spatial(Spatial::create(origin, orientation)),
-		item(Spatial::create()),
+		Spatial(Spatial::create(nullptr, origin, orientation)),
+		item(Spatial::create(this)),
 		inputHandler(this, field, vec3_zero, quat_identity) {
 
 	inputHandler.handHandlerMethod = std::bind(&Grabbable::handInput, this, std::placeholders::_1, std::placeholders::_2);

@@ -17,6 +17,7 @@ public:
 
 	bool hasTime();
 
+	void playPause();
 	void setSongPosition(double songPosition);
 
 	double songPosition = 0.0;

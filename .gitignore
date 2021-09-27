@@ -43,3 +43,5 @@ b/
 .cache/
 
 .vscode/
+
+*.user.*

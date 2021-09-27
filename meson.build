@@ -27,6 +27,13 @@ executable('basicbody',
 	dependencies: dependencies,
 )
 
+executable('directactions',
+	'src/directactions.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	dependencies: dependencies,
+)
+
 executable('environmentitem',
 	'src/environmentitem.cpp',
 	include_directories: includes,

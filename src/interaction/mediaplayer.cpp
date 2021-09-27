@@ -7,10 +7,10 @@ using namespace SKMath;
 MediaPlayer::MediaPlayer(sdbus::IConnection &connection, std::string busName, SKMath::vec3 position, SKMath::quat rotation) :
 mpProxy(sdbus::createProxy(connection, busName, "/org/mpris/MediaPlayer2")),
 mediaPlayer(*mpProxy),
-boxField(vec3_zero, quat_identity, { 0.075f, 0.12f, 0.01f }),
+boxField(nullptr, vec3_zero, quat_identity, { 0.075f, 0.12f, 0.01f }),
 root(position, rotation, boxField, 0.01f),
-body("../res/mediaplayer/body.glb", vec3_zero, quat_identity, vec3_one),
-scrub(0.067f, 0, 1, 0.002f, 0.01f, color_from_hsva(0, 1, 1, 1)) {
+body(&root.item, "../res/mediaplayer/body.glb", vec3_zero, quat_identity, vec3_one),
+scrub(&body, 0.067f, 0, 1, 0.002f, 0.01f, color_from_hsva(0, 1, 1, 1)) {
 
 	scrub.maxDistance = 0.05f;
 	scrub.setPose(pose_t{
@@ -19,8 +19,11 @@ scrub(0.067f, 0, 1, 0.002f, 0.01f, color_from_hsva(0, 1, 1, 1)) {
 	});
 
 	boxField.setSpatialParent(&root.item);
-	body.setSpatialParent(&root.item);
-	scrub.setSpatialParent(&body);
+
+	root.inputHandler.actions["Play/Pause"] = [this] {
+		this->mediaPlayer.playPause();
+	};
+	root.inputHandler.updateActions();
 }
 
 void MediaPlayer::update(double delta) {

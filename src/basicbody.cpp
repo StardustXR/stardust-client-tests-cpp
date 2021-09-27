@@ -18,7 +18,7 @@ int main(int, char *[]) {
 	StardustXRFusion::Setup();
 
 	float cubeSize = 0.08;
-	Model objectModel("../res/realitycomposer.glb", vec3_zero, quat_identity, vec3_one * cubeSize);
+	Model objectModel(nullptr, "../res/realitycomposer.glb", vec3_zero, quat_identity, vec3_one * cubeSize);
 	PhysicsBody objectPhysics;
 
 	vec3 boostVelocity = -vec3_right * 0.5f;

@@ -13,7 +13,7 @@
 
 class Slider : public StardustXRFusion::Spatial {
 public:
-	explicit Slider(float length, float minValue, float maxValue, float barThickness = 0.004f, float orbDiameter = 0.03f, SKMath::color color = SKMath::color{0,0,0.75f,1});
+	explicit Slider(Spatial *parent, float length, float minValue, float maxValue, float barThickness = 0.004f, float orbDiameter = 0.03f, SKMath::color color = SKMath::color{0,0,0.75f,1});
 	~Slider();
 
 	void update();

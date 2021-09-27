@@ -29,24 +29,21 @@ int main(int argc, const char* const argv[]) {
 
 	StardustXRFusion::Setup();
 
-	Spatial root = Spatial::create(vec3_forward * 0.5f, quat_identity);
+	Spatial root = Spatial::create(nullptr, vec3_forward * 0.5f, quat_identity);
 	// root.setOrientation(quat_from_angles(180, 180, 0));
 
 	Slider *eqSliders[sliderCount];
 	for(uint i=0; i<sliderCount; ++i) {
-		eqSliders[i] = new Slider(sliderHeight, 0, 1);
-		eqSliders[i]->setSpatialParent(&root);
+		eqSliders[i] = new Slider(&root, sliderHeight, 0, 1);
 		eqSliders[i]->setOrigin({i*sliderSpacing, sliderSpacing, 0});
 		eqSliders[i]->setOrientation(quat_from_angles(0, 0, 90));
 		eqSliders[i]->setSliderValue(0.5f);
 	}
 
-	Slider sliderSpacingSlider((sliderCount - 1)*sliderSpacing, 0.025f, 0.1f);
-	sliderSpacingSlider.setSpatialParent(&root);
+	Slider sliderSpacingSlider(&root, (sliderCount - 1)*sliderSpacing, 0.025f, 0.1f);
 	sliderSpacingSlider.setSliderValue(sliderSpacing);
 
-	Slider sliderHeightSlider((sliderCount - 1)*sliderSpacing, 0.1f, 1.0f);
-	sliderHeightSlider.setSpatialParent(&root);
+	Slider sliderHeightSlider(&root, (sliderCount - 1)*sliderSpacing, 0.1f, 1.0f);
 	sliderHeightSlider.setOrigin({0, -sliderSpacing, 0});
 	sliderHeightSlider.setSliderValue(sliderHeight);
 

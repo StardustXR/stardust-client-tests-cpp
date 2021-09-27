@@ -13,7 +13,7 @@ public:
 
 	bool isGrabbing();
 	bool grabbingChanged();
-	StardustXRFusion::Field field = StardustXRFusion::Field(SKMath::vec3_zero, SKMath::quat_identity);
+	StardustXRFusion::Field field;
 
 protected:
 	Grabbable grabbable;

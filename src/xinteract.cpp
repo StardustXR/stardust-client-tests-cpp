@@ -14,16 +14,14 @@ using namespace SKMath;
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
-	Spatial root = Spatial::create(vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
+	Spatial root = Spatial::create(nullptr, vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
 
 	float size = 0.1f;
 
 	XInteract xInteract;
 
-    BoxField field(vec3_zero, quat_identity, vec3_one * size);
-	field.setSpatialParent(&root);
+    BoxField field(&root, vec3_zero, quat_identity, vec3_one * size);
     InputHandler handler(&root, field, vec3_zero, quat_identity);
-    handler.setSpatialParent(&root);
 	handler.handHandlerMethod = [&xInteract](const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 		if(hand.distance > 0.0f)
 			return false;

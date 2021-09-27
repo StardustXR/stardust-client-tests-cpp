@@ -5,6 +5,6 @@ using namespace StardustXRFusion;
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
-	Model objectModel("../res/axes.glb");
+	Model objectModel(nullptr, "../res/axes.glb");
 	StardustXRFusion::StallMainThread();
 }

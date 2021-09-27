@@ -23,6 +23,7 @@ public:
 	float maxDistance;
 
 	StardustXRFusion::Spatial item;
+	StardustXRFusion::InputHandler inputHandler;
 protected:
 	bool handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
 	bool pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
@@ -35,5 +36,4 @@ protected:
 	float pointDistance = 0.0f;
 
 	StardustXRFusion::Field *field;
-	StardustXRFusion::InputHandler inputHandler;
 };

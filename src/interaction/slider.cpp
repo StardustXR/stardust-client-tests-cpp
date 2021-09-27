@@ -9,13 +9,13 @@
 using namespace StardustXRFusion;
 using namespace SKMath;
 
-Slider::Slider(float length, float minValue, float maxValue, float barThickness, float orbDiameter, SKMath::color color) :
-	Spatial(Spatial::create()),
-	base("../res/slider/base.glb", vec3_zero, quat_from_angles(0, 180, 0), {0, barThickness, barThickness}),
-	base_inv("../res/slider/base.glb", {length, 0, 0}, quat_identity, {length, barThickness, barThickness}),
-	orb("../res/slider/orb.glb", vec3_zero, quat_identity, vec3_one * orbDiameter),
-	field(vec3_right * (length / 2), quat_identity, {length, barThickness, barThickness}),
-	inputHandler(nullptr, field, vec3_zero, quat_identity) {
+Slider::Slider(Spatial *parent, float length, float minValue, float maxValue, float barThickness, float orbDiameter, SKMath::color color) :
+	Spatial(Spatial::create(parent)),
+	base(this, "../res/slider/base.glb", vec3_zero, quat_from_angles(0, 180, 0), {0, barThickness, barThickness}),
+	base_inv(this, "../res/slider/base.glb", {length, 0, 0}, quat_identity, {length, barThickness, barThickness}),
+	orb(this, "../res/slider/orb.glb", vec3_zero, quat_identity, vec3_one * orbDiameter),
+	field(this, vec3_right * (length / 2), quat_identity, {length, barThickness, barThickness}),
+	inputHandler(this, field, vec3_zero, quat_identity) {
 	
 	inputHandler.handHandlerMethod = std::bind(&Slider::handInput, this, std::placeholders::_1, std::placeholders::_2);
 	inputHandler.pointerHandlerMethod = std::bind(&Slider::pointerInput, this, std::placeholders::_1, std::placeholders::_2);
@@ -28,11 +28,13 @@ Slider::Slider(float length, float minValue, float maxValue, float barThickness,
 	this->barThickness = barThickness;
 	this->orbDiameter = orbDiameter;
 
-	base.setSpatialParent(this);
-	base_inv.setSpatialParent(this);
-	orb.setSpatialParent(this);
-	field.setSpatialParent(this);
-	inputHandler.setSpatialParent(this);
+	inputHandler.actions["+10%"] = [this] {
+		this->setSliderValue(value+((this->maxValue-this->minValue)*0.1f));
+	};
+	inputHandler.actions["-10%"] = [this] {
+		this->setSliderValue(value-((this->maxValue-this->minValue)*0.1f));
+	};
+	inputHandler.updateActions();
 }
 
 Slider::~Slider() {}

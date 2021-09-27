@@ -38,6 +38,10 @@ bool Player::hasTime() {
 	return hasTime_;
 }
 
+void Player::playPause() {
+	PlayPause();
+}
+
 void Player::setSongPosition(double songPosition) {
 	if(hasTime_ && CanSeek() && trackID != "")
 		SetPosition(trackID, 1000000 * songPosition);

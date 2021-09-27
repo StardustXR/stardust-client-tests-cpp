@@ -35,25 +35,22 @@ Orb orbs[patternLockSize][patternLockSize][patternLockSize];
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
-	Spatial root = Spatial::create(vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
+	Spatial root = Spatial::create(nullptr, vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
 
 	for(uint x=0; x<patternLockSize; ++x) {
 		for(uint y=0; y<patternLockSize; ++y) {
 			for(uint z=0; z<patternLockSize; ++z) {
 				orbs[x][y][z] = {};
 				orbs[x][y][z].position = vec3{x-orbOffset, y-orbOffset, z-orbOffset} * orbSpacing;
-				orbs[x][y][z].model = new Model("../res/patternlock/lock_orb.glb", orbs[x][y][z].position);
-				orbs[x][y][z].model->setSpatialParent(&root);
+				orbs[x][y][z].model = new Model(&root, "../res/patternlock/lock_orb.glb", orbs[x][y][z].position);
 				orbs[x][y][z].activatedModel = nullptr;
 			}
 		}
 	}
 	vector<OrbLink> orbLinks;
 
-    BoxField field(vec3_zero, quat_identity, vec3_one * ((patternLockSize - 1) * orbSpacing));
-	field.setSpatialParent(&root);
+    BoxField field(&root, vec3_zero, quat_identity, vec3_one * ((patternLockSize - 1) * orbSpacing));
     InputHandler handler(&root, field, -vec3_one * orbOffset * orbSpacing, quat_identity);
-    handler.setSpatialParent(&root);
 	handler.handHandlerMethod = [&root](const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 		const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
 		const float pinchStrength = datamap.getFloat("pinchStrength");
@@ -65,8 +62,7 @@ int main(int, char *[]) {
 			// coords.z = clamp(coords.z, -0.5f, patternLockSize-0.5f);
 			Orb *orb = &orbs[(uint) coords.x][(uint) coords.y][(uint) coords.z];
 			if(orb->activatedModel == nullptr) {
-				orb->activatedModel = new Model("../res/patternlock/lock_orb_active.glb", orb->position);
-				orb->activatedModel->setSpatialParent(&root);
+				orb->activatedModel = new Model(&root, "../res/patternlock/lock_orb_active.glb", orb->position);
 			}
 		}
 
