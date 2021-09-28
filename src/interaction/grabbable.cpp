@@ -13,16 +13,14 @@ using namespace StardustXRFusion;
 
 Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, StardustXRFusion::Field &field, float maxDistance) :
 		Spatial(Spatial::create(nullptr, origin, orientation)),
-		item(Spatial::create(this)),
-		inputHandler(this, field, vec3_zero, quat_identity) {
+		spaceReference(nullptr),
+		inputHandler(&spaceReference, field, vec3_zero, quat_identity) {
 
 	inputHandler.handHandlerMethod = std::bind(&Grabbable::handInput, this, std::placeholders::_1, std::placeholders::_2);
 	inputHandler.pointerHandlerMethod = std::bind(&Grabbable::pointerInput, this, std::placeholders::_1, std::placeholders::_2);
 
 	this->maxDistance = maxDistance;
 	this->field = &field;
-	inputHandler.setSpatialParent(this);
-	item.setSpatialParent(this);
 }
 
 void Grabbable::update() {
@@ -42,18 +40,10 @@ bool Grabbable::activeChanged() {
 	return xInteract.hasActiveChanged();
 }
 
-void Grabbable::resetStart() {
-	item.setSpatialParent(getSpatialParent());
-	this->setSpatialParent(&item);
-	this->setPose(pose_t{ vec3_zero, quat_identity });
-	this->setSpatialParent(item.getSpatialParent());
-	item.setSpatialParent(this);
-}
-
 void Grabbable::grab(matrix grabMat) {
 	if(xInteract.hasActiveChanged()) {
 		matrix_inverse(grabMat, startGrabMat);
-		startItemMat = matrix_trs(item.getOrigin(), item.getOrientation(), vec3_one);
+		startItemMat = matrix_trs(getOrigin(), getOrientation(), vec3_one);
 	} else {
 		matrix itemMat = startItemMat * startGrabMat * grabMat;
 
@@ -61,8 +51,8 @@ void Grabbable::grab(matrix grabMat) {
 		vec3 scl;
 		quat rot;
 		matrix_decompose(itemMat, pos, scl, rot);
-		item.setOrigin(pos);
-		item.setOrientation(rot);
+		setOrigin(pos);
+		setOrientation(rot);
 	}
 }
 
@@ -96,8 +86,8 @@ bool Grabbable::pointerInput(const StardustXRFusion::PointerInput &pointer, cons
 		grab(pointMat);
 		vec2 scroll = datamap.getVec2("scroll");
 		if(scroll.y != 0.0f) {
-			item.setOrigin(item.getOrigin() + (pointer.direction * scroll.y * 0.00025f));
-			startItemMat = matrix_trs(item.getOrigin(), item.getOrientation(), vec3_one);
+			setOrigin(getOrigin() + (pointer.direction * scroll.y * 0.00025f));
+			startItemMat = matrix_trs(getOrigin(), getOrientation(), vec3_one);
 			matrix_inverse(pointMat, startGrabMat);
 		}
 	}

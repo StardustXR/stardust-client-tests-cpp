@@ -34,7 +34,7 @@ int main(int, char**) {
 			}
 		}
 	}
-	LifeCycle()->onLogicStep([&](double delta, double) {
+	OnLogicStep([&](double delta, double) {
 		for(std::unique_ptr<MediaPlayer> &player : mediaPlayers) {
 			player->update(delta);
 		}

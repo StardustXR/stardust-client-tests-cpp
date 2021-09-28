@@ -37,9 +37,9 @@ public:
 		for (AcceptorItem<T> &acceptorItem : items) {
 			AcceptorItem<T> *acceptorItemPtr = &acceptorItem;
 			Item *item = acceptorItem.item;
-			if(!item || item->field.getNodePath() == "/")
+			if(!item || item->getNodePath() == "/")
 				continue;
-			item->field.distance(field, SKMath::vec3_zero, [acceptorItemPtr](float distance) {
+			item->distance(field, SKMath::vec3_zero, [acceptorItemPtr](float distance) {
 				acceptorItemPtr->distance = distance;
 			});
 		}
@@ -53,9 +53,9 @@ public:
 		}
 	}
 
-	virtual void onAcceptItem(T *item) {
+	void onAcceptItem(T *item) {
 		Item *genericItem = item;
-		genericItem->onAccepted();
+		genericItem->onAccepted(*field);
 	}
 
 protected:
@@ -63,4 +63,4 @@ protected:
 	static std::vector<AcceptorItem<T>> items;
 };
 
-template <typename T> std::vector<AcceptorItem<T>> ItemAcceptor<T>::items(1);
+template <typename T> std::vector<AcceptorItem<T>> ItemAcceptor<T>::items(0);

@@ -13,14 +13,14 @@ using namespace SKMath;
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
 
-	// SphereField acceptorField(vec3_zero, 0.1f);
-	// ItemAcceptor<EnvironmentItem> environmentAcceptor(acceptorField);
+	SphereField acceptorField(nullptr, vec3_zero, 0.1f);
+	ItemAcceptor<EnvironmentItem> environmentAcceptor(acceptorField);
 
 	EnvironmentItem environment("../res/environments/comfy_cafe.hdr", -vec3_right * 0.1f);
 
-	LifeCycle()->onLogicStep([&](double, double) {
+	OnLogicStep([&](double, double) {
 		environment.update();
-		// environmentAcceptor.update();
+		environmentAcceptor.update();
 	});
 	StardustXRFusion::StallMainThread();
 }

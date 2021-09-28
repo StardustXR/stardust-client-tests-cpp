@@ -15,14 +15,12 @@ public:
 	void update();
 	void setField(StardustXRFusion::Field *field);
 
-	void resetStart();
-
 	bool isActive();
 	bool activeChanged();
 
 	float maxDistance;
 
-	StardustXRFusion::Spatial item;
+	StardustXRFusion::Spatial spaceReference;
 	StardustXRFusion::InputHandler inputHandler;
 protected:
 	bool handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);

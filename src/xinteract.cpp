@@ -33,7 +33,7 @@ int main(int, char *[]) {
 		return xInteract.isActive();
 	};
 
-	LifeCycle()->onLogicStep([&xInteract](double delta, double) {
+	OnLogicStep([&xInteract](double delta, double) {
 		xInteract.update();
 		fflush(stdout);
 	});

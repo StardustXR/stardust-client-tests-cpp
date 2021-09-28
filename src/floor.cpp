@@ -31,7 +31,7 @@ int main(int, char *[]) {
 
 	color oldColor = color{0.0f, 0.0f, 0.0f, 1.0f};
 
-	LifeCycle()->onLogicStep([&](double, double) {
+	OnLogicStep([&](double, double) {
 		r.update();
 		g.update();
 		b.update();

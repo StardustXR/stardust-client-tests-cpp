@@ -47,7 +47,7 @@ int main(int argc, const char* const argv[]) {
 	sliderHeightSlider.setOrigin({0, -sliderSpacing, 0});
 	sliderHeightSlider.setSliderValue(sliderHeight);
 
-	LifeCycle()->onLogicStep([&](double, double) {
+	OnLogicStep([&](double, double) {
 		sliderHeightSlider.update();
 		sliderSpacingSlider.update();
 		for(uint i=0; i<sliderCount; ++i) {

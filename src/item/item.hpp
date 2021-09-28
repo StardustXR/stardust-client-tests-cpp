@@ -2,19 +2,18 @@
 
 #include "../interaction/grabbable.hpp"
 #include <stardustxr/fusion/sk_math.hpp>
+#include <stardustxr/fusion/types/fields/field.hpp>
 
-class Item : protected StardustXRFusion::Spatial {
+class Item : public Grabbable {
 public:
 	explicit Item(SKMath::vec3 origin, SKMath::quat orientation);
 
 	void update();
 
-	void onAccepted();
+	void onAccepted(Spatial &acceptor);
 
 	bool isGrabbing();
 	bool grabbingChanged();
-	StardustXRFusion::Field field;
 
-protected:
-	Grabbable grabbable;
+	void distance (Spatial *space, SKMath::vec3 point, std::function<void (float)> callback);
 };

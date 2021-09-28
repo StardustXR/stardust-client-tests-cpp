@@ -9,7 +9,7 @@ mpProxy(sdbus::createProxy(connection, busName, "/org/mpris/MediaPlayer2")),
 mediaPlayer(*mpProxy),
 boxField(nullptr, vec3_zero, quat_identity, { 0.075f, 0.12f, 0.01f }),
 root(position, rotation, boxField, 0.01f),
-body(&root.item, "../res/mediaplayer/body.glb", vec3_zero, quat_identity, vec3_one),
+body(&root, "../res/mediaplayer/body.glb", vec3_zero, quat_identity, vec3_one),
 scrub(&body, 0.067f, 0, 1, 0.002f, 0.01f, color_from_hsva(0, 1, 1, 1)) {
 
 	scrub.maxDistance = 0.05f;
@@ -18,7 +18,7 @@ scrub(&body, 0.067f, 0, 1, 0.002f, 0.01f, color_from_hsva(0, 1, 1, 1)) {
 		quat_identity
 	});
 
-	boxField.setSpatialParent(&root.item);
+	boxField.setSpatialParent(&root);
 
 	root.inputHandler.actions["Play/Pause"] = [this] {
 		this->mediaPlayer.playPause();
