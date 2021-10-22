@@ -13,7 +13,8 @@ void Item::update() {
 void Item::onAccepted(Spatial &acceptor) {
 	printf("Item accepted!\n");
 	setSpatialParent(&acceptor);
-	setPose(pose_t { vec3_zero, quat_identity });
+	setZoneable(false);
+	setPose(pose_t{vec3_zero, quat_identity});
 }
 
 bool Item::isGrabbing() {

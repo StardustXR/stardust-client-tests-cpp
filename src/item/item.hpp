@@ -7,10 +7,11 @@
 class Item : public Grabbable {
 public:
 	explicit Item(SKMath::vec3 origin, SKMath::quat orientation);
+	virtual ~Item() {}
 
 	void update();
 
-	void onAccepted(Spatial &acceptor);
+	virtual void onAccepted(Spatial &acceptor);
 
 	bool isGrabbing();
 	bool grabbingChanged();

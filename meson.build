@@ -79,6 +79,14 @@ executable('slider',
 	dependencies: dependencies,
 )
 
+executable('workspaces',
+        'src/workspaces.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
+)
+
+
 executable('xinteract',
 	'src/xinteract.cpp',
 	include_directories: includes,

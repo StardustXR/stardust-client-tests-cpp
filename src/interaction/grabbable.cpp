@@ -12,18 +12,22 @@ using namespace SKMath;
 using namespace StardustXRFusion;
 
 Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, StardustXRFusion::Field &field, float maxDistance) :
-		Spatial(Spatial::create(nullptr, origin, orientation)),
-		spaceReference(nullptr),
-		inputHandler(&spaceReference, field, vec3_zero, quat_identity) {
+		Spatial(Spatial::create(nullptr, origin, orientation, vec3_one, true, true, false, true)),
+//		spaceReference(nullptr),
+		inputHandler(nullptr, field, vec3_zero, quat_identity) {
 
 	inputHandler.handHandlerMethod = std::bind(&Grabbable::handInput, this, std::placeholders::_1, std::placeholders::_2);
 	inputHandler.pointerHandlerMethod = std::bind(&Grabbable::pointerInput, this, std::placeholders::_1, std::placeholders::_2);
 
 	this->maxDistance = maxDistance;
 	this->field = &field;
+
+	setSpatialParent(&inputHandler);
 }
 
 void Grabbable::update() {
+	if(xInteract.hasActiveChanged())
+		setZoneable(!xInteract.isActive());
 	xInteract.update();
 }
 
@@ -42,17 +46,20 @@ bool Grabbable::activeChanged() {
 
 void Grabbable::grab(matrix grabMat) {
 	if(xInteract.hasActiveChanged()) {
+		setZoneable(!xInteract.isActive());
+		setSpatialParentInPlace(&inputHandler);
 		matrix_inverse(grabMat, startGrabMat);
-		startItemMat = matrix_trs(getOrigin(), getOrientation(), vec3_one);
+		getTransform([this](vec3 pos, quat rot, vec3 scl) {
+			startItemMat = matrix_trs(pos, rot, scl);
+//			inputHandler.setPose({pos, rot});
+		});
 	} else {
 		matrix itemMat = startItemMat * startGrabMat * grabMat;
 
-		vec3 pos;
-		vec3 scl;
+		vec3 pos, scl;
 		quat rot;
 		matrix_decompose(itemMat, pos, scl, rot);
-		setOrigin(pos);
-		setOrientation(rot);
+		setPose(pose_t{pos, rot});
 	}
 }
 
