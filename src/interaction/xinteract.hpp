@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 #include <stardustxr/fusion/types/fields/spherefield.hpp>

@@ -28,5 +28,6 @@ sphereField(this, vec3_zero, size / 2) {
 
 void EnvironmentItem::onAccepted(Spatial &acceptor) {
 	StardustXRFusion::SetSkytex(environment);
+	StardustXRFusion::SetSkylight(environment);
 	Item::onAccepted(acceptor);
 }

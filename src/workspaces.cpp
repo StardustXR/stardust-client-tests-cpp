@@ -2,7 +2,7 @@
 
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/fusion.hpp>
-#include <stardustxr/fusion/types/fields/boxfield.hpp>
+#include <stardustxr/fusion/types/fields/cylinderfield.hpp>
 #include <stardustxr/fusion/types/model.hpp>
 #include <stardustxr/fusion/types/spatial.hpp>
 #include <stardustxr/fusion/types/zone.hpp>
@@ -17,7 +17,10 @@ int main(int, char *[]) {
 
 	Spatial root = Spatial::create(nullptr);
 	Model cell(&root, "../res/workspaces/cell.glb");
-	BoxField field(&root, vec3_zero, quat_identity, vec3_one);
+	Model cell2(&root, "../res/workspaces/cell.glb", -vec3_up);
+	Model divider1(&root, "../res/workspaces/divider.glb");
+	Model divider2(&root, "../res/workspaces/divider.glb", -vec3_up);
+	CylinderField field(&root, vec3_zero, quat_from_angles(90, 0, 0), 1, 1);
 	Zone zone(&root, field);
 
 	zone.onSpatialEnter = [&](Spatial &spatial) {
