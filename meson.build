@@ -34,8 +34,22 @@ executable('directactions',
 	dependencies: dependencies,
 )
 
-executable('environmentitem',
-	'src/environmentitem.cpp',
+# executable('environmentitem_selfimpl',
+# 	'src/environmentitem_selfimpl.cpp',
+# 	include_directories: includes,
+# 	link_whole: sublibs,
+# 	dependencies: dependencies,
+# )
+
+executable('environmentitemspawner',
+	'src/environmentitemspawner.cpp',
+	include_directories: includes,
+	link_whole: sublibs,
+	dependencies: dependencies,
+)
+
+executable('environmentitemui',
+	'src/environmentitemui.cpp',
 	include_directories: includes,
 	link_whole: sublibs,
 	dependencies: dependencies,
@@ -49,20 +63,34 @@ executable('floor',
 )
 
 executable('mediaplayer',
-	'src/mediaplayer.cpp',
-	include_directories: includes,
-	link_whole: sublibs,
-	dependencies: [
-		dependencies,
-		dbus,
-	],
+        'src/mediaplayer.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: [
+                dependencies,
+                dbus,
+        ],
+)
+
+executable('observatory',
+        'src/observatory.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
+)
+
+executable('panelui',
+        'src/panelui.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
 )
 
 executable('patternlock',
-	'src/patternlock.cpp',
-	include_directories: includes,
-	link_whole: sublibs,
-	dependencies: dependencies,
+        'src/patternlock.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
 )
 
 executable('screen',
@@ -78,14 +106,6 @@ executable('slider',
 	link_whole: sublibs,
 	dependencies: dependencies,
 )
-
-executable('workspaces',
-        'src/workspaces.cpp',
-        include_directories: includes,
-        link_whole: sublibs,
-        dependencies: dependencies,
-)
-
 
 executable('xinteract',
 	'src/xinteract.cpp',

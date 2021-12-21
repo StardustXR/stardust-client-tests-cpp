@@ -1,19 +1,17 @@
 #pragma once
 
-#include "item.hpp"
+#include "../interaction/grabbable.hpp"
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/fields/spherefield.hpp>
+#include <stardustxr/fusion/types/items/environment.hpp>
 #include <stardustxr/fusion/types/model.hpp>
 
-class EnvironmentItem : public Item {
+class EnvironmentItemUI : public Grabbable {
 public:
-	explicit EnvironmentItem(std::string environment, SKMath::vec3 origin, SKMath::quat orientation = SKMath::quat_identity, float size = 0.07);
-	virtual ~EnvironmentItem() {}
-
-	void onAccepted(Spatial &acceptor);
+	explicit EnvironmentItemUI(StardustXRFusion::EnvironmentItem &item, float size = 0.07f);
 
 protected:
-	std::string environment;
+	StardustXRFusion::EnvironmentItem environmentItem;
 	StardustXRFusion::Model model;
 	StardustXRFusion::SphereField sphereField;
 };

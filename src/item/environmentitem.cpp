@@ -4,30 +4,21 @@
 #include <stardustxr/fusion/types/fields/field.hpp>
 #include <stardustxr/fusion/types/fields/spherefield.hpp>
 
-#include "acceptor.hpp"
-
 using namespace SKMath;
 
-EnvironmentItem::EnvironmentItem(std::string environment, vec3 origin, quat orientation, float size) :
-Item(origin, orientation),
+EnvironmentItemUI::EnvironmentItemUI(StardustXRFusion::EnvironmentItem &item, float size) :
+Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.05f),
+environmentItem(item),
 model(this, "../res/item/skyball.glb", vec3_zero, quat_identity, vec3_one * size),
 sphereField(this, vec3_zero, size / 2) {
 	setField(&sphereField);
-	ItemAcceptor<EnvironmentItem>::addItem(this);
-	this->environment = environment;
-	model.setMaterialProperty(0, "diffuse", environment);
+	model.setMaterialProperty(0, "diffuse", item.path);
 
-	inputHandler.actions["setSkytex"] = [environment] {
-		StardustXRFusion::SetSkytex(environment);
+	inputHandler.actions["setSkytex"] = [item] {
+		StardustXRFusion::SetSkytex(item.path);
 	};
-	inputHandler.actions["setSkylight"] = [environment] {
-		StardustXRFusion::SetSkylight(environment);
+	inputHandler.actions["setSkylight"] = [item] {
+		StardustXRFusion::SetSkylight(item.path);
 	};
 	inputHandler.updateActions();
-}
-
-void EnvironmentItem::onAccepted(Spatial &acceptor) {
-	StardustXRFusion::SetSkytex(environment);
-	StardustXRFusion::SetSkylight(environment);
-	Item::onAccepted(acceptor);
 }

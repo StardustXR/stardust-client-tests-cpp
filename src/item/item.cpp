@@ -4,26 +4,20 @@
 
 using namespace SKMath;
 
-Item::Item(vec3 origin, quat orientation) :
-Grabbable(origin, orientation, StardustXRFusion::Field::Empty()) {}
-
-void Item::update() {
-	Grabbable::update();
-}
-void Item::onAccepted(Spatial &acceptor) {
-	printf("Item accepted!\n");
-	setSpatialParent(&acceptor);
-	setZoneable(false);
-	setPose(pose_t{vec3_zero, quat_identity});
+GrabbableItemUI::GrabbableItemUI(StardustXRFusion::Item *item) :
+Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.05f),
+item(item) {
+	item->setSpatialParent(this);
+	inputHandler.setEnabled(false);
+	item->getTransform([this](vec3 pos, quat rot, vec3 scl) {
+		this->setPose({pos, rot});
+		inputHandler.setEnabled(true);
+	});
 }
 
-bool Item::isGrabbing() {
+bool GrabbableItemUI::isGrabbing() {
 	return Grabbable::isActive();
 }
-bool Item::grabbingChanged() {
+bool GrabbableItemUI::grabbingChanged() {
 	return Grabbable::activeChanged();
-}
-
-void Item::distance(Spatial *space, SKMath::vec3 point, std::function<void (float)> callback) {
-	field->distance(space, point, callback);
 }
