@@ -100,11 +100,18 @@ executable('screen',
 	dependencies: dependencies,
 )
 
+executable('scrollpanel',
+        'src/scrollpanel.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
+)
+
 executable('slider',
-	'src/slider.cpp',
-	include_directories: includes,
-	link_whole: sublibs,
-	dependencies: dependencies,
+        'src/slider.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
 )
 
 executable('xinteract',

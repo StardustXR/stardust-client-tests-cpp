@@ -8,7 +8,7 @@
 
 class PanelItemUI : public Grabbable {
 public:
-	explicit PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t width, uint32_t height, uint32_t density, float ppm = 0.0005f);
+	explicit PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t width, uint32_t height, float ppm = 0.0005f);
 
 	void update();
 	StardustXRFusion::PanelItem panel;

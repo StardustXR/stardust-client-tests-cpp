@@ -14,9 +14,9 @@ std::vector<std::unique_ptr<PanelItemUI>> panels;
 int main(int argc, char *argv[]) {
 	StardustXRFusion::Setup();
 
-	PanelItem::registerUIHandler([&](bool create, PanelItem &item, uint32_t width, uint32_t height, uint32_t density) {
+	PanelItem::registerUIHandler([&](bool create, PanelItem &item, uint32_t width, uint32_t height) {
 		if(create) {
-			panels.emplace_back(new PanelItemUI(item, width, height, density));
+			panels.emplace_back(new PanelItemUI(item, width, height));
 		} else {
 			panels.erase(std::remove_if(
 				panels.begin(),

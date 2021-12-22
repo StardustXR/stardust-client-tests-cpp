@@ -6,12 +6,12 @@
 
 using namespace SKMath;
 
-PanelItemUI::PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t width, uint32_t height, uint32_t density, float ppm) :
+PanelItemUI::PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t width, uint32_t height, float ppm) :
 Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.05f),
 panel(item),
 ppm(ppm),
-model(this, "../res/item/panelitem.glb", vec3_zero, quat_identity, vec3{ppm * width / density, ppm * height / density, 0.01f}),
-boxField(this, vec3_zero, quat_identity, vec3{ppm * width / density, ppm * height / density, 0.01f}) {
+model(this, "../res/item/panelitem.glb", vec3_zero, quat_identity, vec3{ppm * width, ppm * height, 0.01f}),
+boxField(this, vec3_zero, quat_identity, vec3{ppm * width, ppm * height, 0.01f}) {
 	setField(&boxField);
 	item.applySurfaceMaterial(model, 0);
 	item.setSpatialParent(this);
@@ -27,10 +27,10 @@ boxField(this, vec3_zero, quat_identity, vec3{ppm * width / density, ppm * heigh
 
 void PanelItemUI::update() {
 	Grabbable::update();
-	panel.getData([this](uint32_t width, uint32_t height, uint32_t density) {
+	panel.getData([this](uint32_t width, uint32_t height) {
 		pixelWidth = width;
 		pixelHeight = height;
-		model.setScale(vec3{ppm * width / density, ppm * height / density, 0.01f});
-		boxField.setSize(vec3{ppm * width / density, ppm * height / density, 0.01f});
+		model.setScale(  vec3{ppm * width, ppm * height, 0.01f});
+		boxField.setSize(vec3{ppm * width, ppm * height, 0.01f});
 	});
 }
