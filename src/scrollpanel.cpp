@@ -28,6 +28,7 @@ int main() {
 	PanelItem *panel = nullptr;
 
 	XInteract xInteract;
+	float scrollMultiplier = 5;
 	float maxDistance = 0.005f;
 	handler.pointerHandlerMethod = [&](const PointerInput &pointer, const Datamap &datamap) {
 		if(panel == nullptr || pointer.distance > maxDistance)
@@ -39,10 +40,19 @@ int main() {
 			cursor.x = map(deepestPoint.x, -centerWidth/2, centerWidth/2, 0, surfWidth);
 			cursor.y = map(deepestPoint.y,          .15/2,        -.15/2, 0, surfHeight);
 			panel->setPointerPosition(cursor);
+
 			const float selectPressed = datamap.getFloat("select");
 			panel->setPointerButtonPressed(BTN_LEFT, selectPressed > 0.9f);
+
 			const vec2 scroll = datamap.getVec2("scroll");
-			panel->scrollPointerAxis(0, scroll.x, scroll.y, (int32_t) scroll.x, (int32_t) scroll.y);
+			panel->scrollPointerAxis(0, scroll.x * scrollMultiplier, scroll.y * scrollMultiplier, (int32_t) scroll.x, (int32_t) scroll.y);
+
+//			if(selectPressed > 0.9f) {
+//				panel->touchDown(0, cursor.x, cursor.y);
+//				panel->touchMove(0, cursor.x, cursor.y);
+//			} else {
+//				panel->touchUp(0);
+//			}
 		}
 		return false;
 	};
@@ -60,7 +70,7 @@ int main() {
 	OnLogicStep([&](double, double) {
 		if(panel != nullptr) {
 			panel->getData([&](uint32_t width, uint32_t height) {
-				panel->setPointerActive(true);
+//				panel->setPointerActive(true);
 				surfWidth  = width;
 				surfHeight = height;
 				float scale = (float)width / (float)height;
