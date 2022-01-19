@@ -3,7 +3,7 @@
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
-#include <stardustxr/fusion/types/items/panel.hpp>
+#include <stardustxr/fusion/types/items/types/panel.hpp>
 #include "../include/math_util.hpp"
 
 #include <linux/input-event-codes.h>
@@ -57,23 +57,22 @@ int main() {
 		return false;
 	};
 
-	PanelItem::registerUIHandler([&](bool active, PanelItem &panelItem, uint32_t, uint32_t) {
-		if(active) {
-			if(panel != nullptr) {
-				delete panel;
-			}
-			panel = new PanelItem(panelItem);
-			panel->applySurfaceMaterial(center, 0);
+	PanelItem::registerUIHandlers([&](PanelItem &panelItem, PanelItem::Data data) {
+		if(panel != nullptr) {
+			delete panel;
 		}
+		panel = new PanelItem(panelItem);
+		panel->applySurfaceMaterial(center, 0);
+	}, [&](PanelItem &panelItem) {
 	});
 
 	OnLogicStep([&](double, double) {
 		if(panel != nullptr) {
-			panel->getData([&](uint32_t width, uint32_t height) {
-//				panel->setPointerActive(true);
-				surfWidth  = width;
-				surfHeight = height;
-				float scale = (float)width / (float)height;
+			panel->getData([&](PanelItem::Data data) {
+				panel->setPointerActive(true);
+				surfWidth  = data.width;
+				surfHeight = data.height;
+				float scale = (float)data.width / (float)data.height;
 				centerWidth = 0.15f * scale;
 
 				center.setScale(vec3{scale, 1, 1});

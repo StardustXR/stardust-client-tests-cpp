@@ -6,19 +6,19 @@
 
 using namespace SKMath;
 
-EnvironmentItemUI::EnvironmentItemUI(StardustXRFusion::EnvironmentItem &item, float size) :
+EnvironmentItemUI::EnvironmentItemUI(StardustXRFusion::EnvironmentItem &item, StardustXRFusion::EnvironmentItem::Data data, float size) :
 Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.05f),
 environmentItem(item),
 model(this, "../res/item/skyball.glb", vec3_zero, quat_identity, vec3_one * size),
 sphereField(this, vec3_zero, size / 2) {
 	setField(&sphereField);
-	model.setMaterialProperty(0, "diffuse", item.path);
+	model.setMaterialProperty(0, "diffuse", data.path);
 
-	inputHandler.actions["setSkytex"] = [item] {
-		StardustXRFusion::SetSkytex(item.path);
+	inputHandler.actions["setSkytex"] = [data] {
+		StardustXRFusion::SetSkytex(data.path);
 	};
-	inputHandler.actions["setSkylight"] = [item] {
-		StardustXRFusion::SetSkylight(item.path);
+	inputHandler.actions["setSkylight"] = [data] {
+		StardustXRFusion::SetSkylight(data.path);
 	};
 	inputHandler.updateActions();
 }

@@ -1,6 +1,6 @@
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/sk_math.hpp>
-#include <stardustxr/fusion/types/items/environment.hpp>
+#include <stardustxr/fusion/types/items/types/environment.hpp>
 #include <vector>
 
 using namespace StardustXRFusion;

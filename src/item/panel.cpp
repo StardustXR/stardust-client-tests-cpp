@@ -6,31 +6,34 @@
 
 using namespace SKMath;
 
-PanelItemUI::PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t width, uint32_t height, float ppm) :
-Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.05f),
+PanelItemUI::PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t pixelWidth, uint32_t pixelHeight, float width, float thickness) :
+Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.025f),
 panel(item),
-ppm(ppm),
-model(this, "../res/item/panelitem.glb", vec3_zero, quat_identity, vec3{ppm * width, ppm * height, 0.01f}),
-boxField(this, vec3_zero, quat_identity, vec3{ppm * width, ppm * height, 0.01f}) {
+width(width),
+thickness(thickness),
+model(this, "../res/item/panelitem.glb", vec3_zero, quat_identity, vec3{width, width * pixelHeight / pixelWidth, thickness}),
+boxField(this, vec3_zero, quat_identity, vec3{width, width * pixelHeight / pixelWidth, thickness}) {
 	setField(&boxField);
 	item.applySurfaceMaterial(model, 0);
 	item.setSpatialParent(this);
 	inputHandler.actions["close"] = [this]() {
 		panel.close();
 	};
-	inputHandler.actions["squarify"] = [this]() {
-		uint32_t side = std::max(pixelWidth, pixelHeight);
-		panel.resize(side, side);
-	};
 	inputHandler.updateActions();
 }
 
 void PanelItemUI::update() {
 	Grabbable::update();
-	panel.getData([this](uint32_t width, uint32_t height) {
-		pixelWidth = width;
-		pixelHeight = height;
-		model.setScale(  vec3{ppm * width, ppm * height, 0.01f});
-		boxField.setSize(vec3{ppm * width, ppm * height, 0.01f});
+	if(xInteract.hasActiveChanged()) {
+		if(xInteract.isActive())
+			panel.release();
+		else
+			panel.triggerAccept();
+	}
+	panel.getData([this](StardustXRFusion::PanelItem::Data data) {
+		pixelWidth = data.width;
+		pixelHeight = data.height;
+		model.setScale(  vec3{width, width * pixelHeight / pixelWidth, thickness});
+		boxField.setSize(vec3{width, width * pixelHeight / pixelWidth, thickness});
 	});
 }

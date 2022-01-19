@@ -3,12 +3,12 @@
 #include "../interaction/grabbable.hpp"
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
-#include <stardustxr/fusion/types/items/panel.hpp>
+#include <stardustxr/fusion/types/items/types/panel.hpp>
 #include <stardustxr/fusion/types/model.hpp>
 
 class PanelItemUI : public Grabbable {
 public:
-	explicit PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t width, uint32_t height, float ppm = 0.0005f);
+	explicit PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t pixelWidth, uint32_t pixelHeight, float width = 0.05f, float thickness = 0.005f);
 
 	void update();
 	StardustXRFusion::PanelItem panel;
@@ -16,7 +16,8 @@ public:
 protected:
 	uint32_t pixelWidth;
 	uint32_t pixelHeight;
-	float ppm;
+	float width;
+	float thickness;
 	StardustXRFusion::Model model;
 	StardustXRFusion::BoxField boxField;
 };

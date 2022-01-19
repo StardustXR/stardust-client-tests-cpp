@@ -1,7 +1,7 @@
 #include "src/item/panel.hpp"
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/sk_math.hpp>
-#include <stardustxr/fusion/types/items/panel.hpp>
+#include <stardustxr/fusion/types/items/types/panel.hpp>
 #include <stardustxr/fusion/types/model.hpp>
 #include <memory>
 #include <vector>
@@ -14,19 +14,17 @@ std::vector<std::unique_ptr<PanelItemUI>> panels;
 int main(int argc, char *argv[]) {
 	StardustXRFusion::Setup();
 
-	PanelItem::registerUIHandler([&](bool create, PanelItem &item, uint32_t width, uint32_t height) {
-		if(create) {
-			panels.emplace_back(new PanelItemUI(item, width, height));
-		} else {
-			panels.erase(std::remove_if(
-				panels.begin(),
-				panels.end(),
-				[&item](std::unique_ptr<PanelItemUI> &listSurface) {
-					return listSurface->panel.getNodeName() == item.getNodeName();
-				}),
-				panels.end()
-			);
-		}
+	PanelItem::registerUIHandlers([&](PanelItem &item, PanelItem::Data data) {
+		panels.emplace_back(new PanelItemUI(item, data.width, data.height));
+	}, [&](PanelItem &item) {
+		panels.erase(std::remove_if(
+			panels.begin(),
+			panels.end(),
+			[&item](std::unique_ptr<PanelItemUI> &listSurface) {
+				return listSurface->panel.getNodeName() == item.getNodeName();
+			}),
+			panels.end()
+		);
 	});
 
 	OnLogicStep([&](double delta, double) {

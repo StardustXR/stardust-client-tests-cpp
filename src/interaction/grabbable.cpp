@@ -94,7 +94,7 @@ bool Grabbable::pointerInput(const StardustXRFusion::PointerInput &pointer, cons
 		grab(pointMat);
 		vec2 scroll = datamap.getVec2("scroll");
 		if(scroll.y != 0.0f) {
-			setOrigin(getOrigin() + (pointer.direction * scroll.y * 0.00025f));
+			setOrigin(getOrigin() + (pointer.direction * scroll.y * 0.01f));
 			startItemMat = matrix_trs(getOrigin(), getOrientation(), vec3_one);
 			matrix_inverse(pointMat, startGrabMat);
 		}
