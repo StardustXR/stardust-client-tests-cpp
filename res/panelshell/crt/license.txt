@@ -1,0 +1,11 @@
+Model Information:
+* title:	CRT TV
+* source:	https://sketchfab.com/3d-models/crt-tv-9ba4baa106e64319a0b540cf0af5aa9e
+* author:	Timothy Ahene (https://sketchfab.com/timothyahene)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "CRT TV" (https://sketchfab.com/3d-models/crt-tv-9ba4baa106e64319a0b540cf0af5aa9e) by Timothy Ahene (https://sketchfab.com/timothyahene) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

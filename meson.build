@@ -79,6 +79,13 @@ executable('observatory',
         dependencies: dependencies,
 )
 
+executable('panelshell',
+        'src/panelshell.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
+)
+
 executable('panelui',
         'src/panelui.cpp',
         include_directories: includes,
