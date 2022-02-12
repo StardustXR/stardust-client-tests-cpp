@@ -17,8 +17,8 @@ Slider::Slider(Spatial *parent, float length, float minValue, float maxValue, fl
 	field(this, vec3_right * (length / 2), quat_identity, {length, barThickness, barThickness}),
 	inputHandler(this, field, vec3_zero, quat_identity) {
 	
-	inputHandler.handHandlerMethod = std::bind(&Slider::handInput, this, std::placeholders::_1, std::placeholders::_2);
-	inputHandler.pointerHandlerMethod = std::bind(&Slider::pointerInput, this, std::placeholders::_1, std::placeholders::_2);
+	inputHandler.handHandlerMethod = std::bind(&Slider::handInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	inputHandler.pointerHandlerMethod = std::bind(&Slider::pointerInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 
 	base.setMaterialProperty(0, "color", color);
 
@@ -76,7 +76,7 @@ void Slider::setSliderLength(float length) {
 	setSliderValue(value);
 }
 
-bool Slider::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
+bool Slider::handInput(const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 	const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
 	field.distance(&inputHandler, pinchPos, [&](float distance) { pinchDistance = distance; });
 	if(!xInteract.isActive() && pinchDistance > maxDistance)
@@ -88,7 +88,7 @@ bool Slider::handInput(const StardustXRFusion::HandInput &hand, const StardustXR
 		setSliderPos(pinchPos.x);
 	return xInteract.isActive();
 }
-bool Slider::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
+bool Slider::pointerInput(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
 	if(!xInteract.isActive() && pointer.distance > maxDistance)
 		return false;
 	const float select = datamap.getFloat("select");

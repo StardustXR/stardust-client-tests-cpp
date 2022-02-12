@@ -18,8 +18,8 @@ Screen::Screen(SKMath::vec3 origin, SKMath::quat orientation, std::string modelP
 		inputHandler(nullptr, field, vec3_zero, quat_identity),
 		domeModel(this, "../res/touch_dome.glb", vec3_zero, quat_identity, vec3_one) {
 
-	inputHandler.handHandlerMethod = std::bind(&Screen::handInput, this, std::placeholders::_1, std::placeholders::_2);
-	inputHandler.pointerHandlerMethod = std::bind(&Screen::pointerInput, this, std::placeholders::_1, std::placeholders::_2);
+	inputHandler.handHandlerMethod = std::bind(&Screen::handInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	inputHandler.pointerHandlerMethod = std::bind(&Screen::pointerInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 
 	this->field = &field;
 	model.setSpatialParent(this);
@@ -31,7 +31,7 @@ void Screen::update() {
 	xInteract.update();
 }
 
-bool Screen::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
+bool Screen::handInput(const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 	if(hand.distance > maxDistance)
 		return false;
 	xInteract.input(false);
@@ -39,7 +39,7 @@ bool Screen::handInput(const StardustXRFusion::HandInput &hand, const StardustXR
 	setCursor(SKMath::vec2{pinchPos.x, pinchPos.y});
 	return false;
 }
-bool Screen::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
+bool Screen::pointerInput(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
 	if(pointer.distance > maxDistance)
 		return false;
 	xInteract.input(false);

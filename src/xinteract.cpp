@@ -22,7 +22,7 @@ int main(int, char *[]) {
 
     BoxField field(&root, vec3_zero, quat_identity, vec3_one * size);
     InputHandler handler(&root, field, vec3_zero, quat_identity);
-	handler.handHandlerMethod = [&xInteract](const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
+	handler.handHandlerMethod = [&xInteract](const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 		if(hand.distance > 0.0f)
 			return false;
 		const float pinchStrength = datamap.getFloat("pinchStrength");

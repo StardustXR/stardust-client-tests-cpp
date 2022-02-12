@@ -51,7 +51,7 @@ int main(int, char *[]) {
 
     BoxField field(&root, vec3_zero, quat_identity, vec3_one * ((patternLockSize - 1) * orbSpacing));
     InputHandler handler(&root, field, -vec3_one * orbOffset * orbSpacing, quat_identity);
-	handler.handHandlerMethod = [&root](const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
+	handler.handHandlerMethod = [&root](const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 		const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
 		const float pinchStrength = datamap.getFloat("pinchStrength");
 

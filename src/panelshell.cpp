@@ -36,7 +36,7 @@ int main(int, char *[]) {
 
 	float scrollMultiplier = 5;
 	float maxDistance = 0.005f;
-	inputHandler.pointerHandlerMethod = [&](const PointerInput &pointer, const Datamap &datamap) {
+	inputHandler.pointerHandlerMethod = [&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
 		if(panel == nullptr || pointer.distance > maxDistance)
 			return false;
 		const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));

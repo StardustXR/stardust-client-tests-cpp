@@ -3,6 +3,9 @@ includes = include_directories('include')
 
 fusion = dependency('stardustxr-fusion')
 dbus = dependency('sdbus-c++')
+xcb = dependency('xcb')
+xkb = dependency('xkbcommon')
+xkb_x11 = dependency('xkbcommon-x11')
 
 dependencies = [fusion]
 
@@ -111,7 +114,7 @@ executable('scrollpanel',
         'src/scrollpanel.cpp',
         include_directories: includes,
         link_whole: sublibs,
-        dependencies: dependencies,
+        dependencies: [dependencies, xcb, xkb, xkb_x11],
 )
 
 executable('slider',

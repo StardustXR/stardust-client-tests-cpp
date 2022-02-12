@@ -22,8 +22,8 @@ public:
 
 	StardustXRFusion::InputHandler inputHandler;
 protected:
-	bool handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
-	bool pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
+	bool handInput(std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
+	bool pointerInput(std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
 	void grab(SKMath::matrix grabMat);
 
 	XInteract xInteract;

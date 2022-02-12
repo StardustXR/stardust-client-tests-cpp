@@ -9,7 +9,7 @@ Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.05f),
 item(item) {
 	item->setSpatialParent(this);
 	inputHandler.setEnabled(false);
-	item->getTransform([this](vec3 pos, quat rot, vec3 scl) {
+	item->getTransform(nullptr, [this](vec3 pos, quat rot, vec3 scl) {
 		this->setPose({pos, rot});
 		inputHandler.setEnabled(true);
 	});

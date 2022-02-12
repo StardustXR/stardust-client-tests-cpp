@@ -7,6 +7,8 @@
 #include "../include/math_util.hpp"
 
 #include <linux/input-event-codes.h>
+#include <xkbcommon/xkbcommon.h>
+#include <xkbcommon/xkbcommon-x11.h>
 
 #include "interaction/xinteract.hpp"
 
@@ -15,6 +17,14 @@ using namespace SKMath;
 
 int main() {
 	Setup();
+
+	xkb_keymap *keymap;
+	{
+		struct xkb_context *xkb_ctx = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+		struct xkb_rule_names names = {};
+		keymap = xkb_keymap_new_from_names(xkb_ctx, &names, XKB_KEYMAP_COMPILE_NO_FLAGS);
+	}
+	std::string keymapString = xkb_keymap_get_as_string(keymap, XKB_KEYMAP_FORMAT_TEXT_V1);
 
 	uint32_t surfWidth, surfHeight;
 	float centerWidth = 0.15f;
@@ -30,9 +40,10 @@ int main() {
 	XInteract xInteract;
 	float scrollMultiplier = 5;
 	float maxDistance = 0.005f;
-	handler.pointerHandlerMethod = [&](const PointerInput &pointer, const Datamap &datamap) {
+	handler.pointerHandlerMethod = [&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
 		if(panel == nullptr || pointer.distance > maxDistance)
 			return false;
+		panel->setKeyboardActive(pointer.distance < maxDistance);
 		xInteract.input(false);
 		const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 		if(pointer.origin.z > 0 && pointer.distance < maxDistance) {
@@ -63,6 +74,7 @@ int main() {
 		}
 		panel = new PanelItem(panelItem);
 		panel->applySurfaceMaterial(center, 0);
+		panel->setKeymap(keymapString);
 	}, [&](PanelItem &panelItem) {
 	});
 

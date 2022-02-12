@@ -17,8 +17,8 @@ Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, StardustXRFu
 //		spaceReference(nullptr),
 		inputHandler(nullptr, field, vec3_zero, quat_identity) {
 
-	inputHandler.handHandlerMethod = std::bind(&Grabbable::handInput, this, std::placeholders::_1, std::placeholders::_2);
-	inputHandler.pointerHandlerMethod = std::bind(&Grabbable::pointerInput, this, std::placeholders::_1, std::placeholders::_2);
+	inputHandler.handHandlerMethod = std::bind(&Grabbable::handInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	inputHandler.pointerHandlerMethod = std::bind(&Grabbable::pointerInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 
 	this->maxDistance = maxDistance;
 	this->field = &field;
@@ -50,7 +50,7 @@ void Grabbable::grab(matrix grabMat) {
 		setZoneable(!xInteract.isActive());
 		setSpatialParentInPlace(&inputHandler);
 		matrix_inverse(grabMat, startGrabMat);
-		getTransform([this](vec3 pos, quat rot, vec3 scl) {
+		getTransform(&inputHandler, [this](vec3 pos, quat rot, vec3 scl) {
 			startItemMat = matrix_trs(pos, rot, scl);
 //			inputHandler.setPose({pos, rot});
 		});
@@ -64,7 +64,7 @@ void Grabbable::grab(matrix grabMat) {
 	}
 }
 
-bool Grabbable::handInput(const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
+bool Grabbable::handInput(const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 	const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
 	field->distance(&inputHandler, pinchPos, [&](float distance) { pinchDistance = distance; });
 	if(pinchDistance > maxDistance && !xInteract.isActive())
@@ -79,7 +79,7 @@ bool Grabbable::handInput(const StardustXRFusion::HandInput &hand, const Stardus
 	return xInteract.isActive();
 }
 
-bool Grabbable::pointerInput(const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
+bool Grabbable::pointerInput(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
 	const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 	field->distance(&inputHandler, deepestPoint, [&](float distance) {
 		pointDistance = distance;
