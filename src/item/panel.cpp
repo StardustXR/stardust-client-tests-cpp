@@ -25,10 +25,10 @@ boxField(this, vec3_zero, quat_identity, vec3{width, width * pixelHeight / pixel
 void PanelItemUI::update() {
 	Grabbable::update();
 	if(xInteract.hasActiveChanged()) {
-		if(xInteract.isActive())
-			panel.release();
-		else
+		if(!xInteract.isActive())
 			panel.triggerAccept();
+//		else
+//			panel.release();
 	}
 	panel.getData([this](StardustXRFusion::PanelItem::Data data) {
 		pixelWidth = data.width;

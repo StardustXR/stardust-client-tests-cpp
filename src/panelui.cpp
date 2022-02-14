@@ -15,7 +15,8 @@ int main(int argc, char *argv[]) {
 	StardustXRFusion::Setup();
 
 	PanelItem::registerUIHandlers([&](PanelItem &item, PanelItem::Data data) {
-		panels.emplace_back(new PanelItemUI(item, data.width, data.height));
+		panels.emplace_back(new PanelItemUI(item, data.width, data.height, 0.15f, 0.01f));
+		panels.back()->setOrigin(vec3_forward * 0.4f);
 	}, [&](PanelItem &item) {
 		panels.erase(std::remove_if(
 			panels.begin(),

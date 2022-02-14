@@ -7,7 +7,7 @@
 
 using namespace StardustXRFusion;
 
-class EnhancedInputHandler : public InputHandler {
+class InputActionHandler : public InputHandler {
 public:
 	struct InputMethod {
 		std::string uuid;
@@ -37,10 +37,10 @@ public:
 		std::vector<InputMethod> queuedActiveInputs;
 	};
 
-	explicit EnhancedInputHandler(Spatial *parent, Field &field, SKMath::vec3 origin, SKMath::quat orientation);
-	explicit EnhancedInputHandler(Spatial *parent, SKMath::vec3 origin, SKMath::quat orientation);
+	explicit InputActionHandler(Spatial *parent, Field &field, SKMath::vec3 origin, SKMath::quat orientation);
+	explicit InputActionHandler(Spatial *parent, SKMath::vec3 origin, SKMath::quat orientation);
 
-	std::vector<Action> actions;
+	std::vector<Action> inputActions;
 	void update();
 
 protected:

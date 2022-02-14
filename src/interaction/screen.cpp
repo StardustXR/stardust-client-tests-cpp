@@ -43,9 +43,8 @@ bool Screen::pointerInput(const std::string uuid, const StardustXRFusion::Pointe
 	if(pointer.distance > maxDistance)
 		return false;
 	xInteract.input(false);
-	const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 
-	if(abs(deepestPoint.z) > abs(dimensions.z*2)) {
+	if(abs(pointer.deepestPoint.z) > abs(dimensions.z*2)) {
 		domeModel.setScale(vec3_zero);
 		return false;
 	}
@@ -53,7 +52,7 @@ bool Screen::pointerInput(const std::string uuid, const StardustXRFusion::Pointe
 	domeModel.setScale(vec3_one * (1.0f - clamp(map(pointer.distance, 0, maxDistance, 0, 1), 0, 1)));
 
 	if(pointer.origin.z > 0 && pointer.distance < maxDistance)
-		setCursor({deepestPoint.x, deepestPoint.y});
+		setCursor({pointer.deepestPoint.x, pointer.deepestPoint.y});
 	return false;
 }
 

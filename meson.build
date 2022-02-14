@@ -59,10 +59,17 @@ executable('environmentitemui',
 )
 
 executable('floor',
-	'src/floor.cpp',
-	include_directories: includes,
-	link_whole: sublibs,
-	dependencies: dependencies,
+        'src/floor.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
+)
+
+executable('inputactions',
+        'src/inputactions.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
 )
 
 executable('mediaplayer',

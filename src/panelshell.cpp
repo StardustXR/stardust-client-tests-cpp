@@ -14,6 +14,7 @@
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
+#include <stardustxr/fusion/types/input/types/handinput.hpp>
 #include <stardustxr/fusion/types/items/acceptors/panel.hpp>
 
 using namespace StardustXRFusion;
@@ -23,7 +24,7 @@ PanelItem *panel = nullptr;
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
-	Spatial root = Spatial::create(nullptr, vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
+	Spatial root = Spatial::create(nullptr, vec3{0, -0.5f, -0.5f}, quat_identity, vec3_one, true, true, false, true);
 
 	Model crt(&root, "../res/panelshell/crt.glb", vec3_zero, quat_from_angles(0, 180, 0));
 
@@ -39,11 +40,10 @@ int main(int, char *[]) {
 	inputHandler.pointerHandlerMethod = [&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
 		if(panel == nullptr || pointer.distance > maxDistance)
 			return false;
-		const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 		if(pointer.origin.z > 0 && pointer.distance < maxDistance) {
 			vec2 cursor;
-			cursor.x = map(deepestPoint.x,        -0.2f,         0.2f, 0, 800);
-			cursor.y = map(deepestPoint.y,  0.312254f/2, -0.312254f/2, 0, 600);
+			cursor.x = map(pointer.deepestPoint.x,        -0.2f,         0.2f, 0, 800);
+			cursor.y = map(pointer.deepestPoint.y,  0.312254f/2, -0.312254f/2, 0, 600);
 			panel->setPointerPosition(cursor);
 
 			const float selectPressed = datamap.getFloat("select");
@@ -51,6 +51,22 @@ int main(int, char *[]) {
 
 			const vec2 scroll = datamap.getVec2("scroll");
 			panel->scrollPointerAxis(0, scroll.x * scrollMultiplier, scroll.y * scrollMultiplier, (int32_t) scroll.x, (int32_t) scroll.y);
+		}
+		return false;
+	};
+	inputHandler.handHandlerMethod = [&](const std::string uuid, const HandInput &hand, const Datamap &datamap) {
+		if(panel == nullptr || hand.distance > maxDistance)
+			return false;
+
+		const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
+		if(pinchPos.z > 0 && hand.distance < maxDistance) {
+			vec2 cursor;
+			cursor.x = map(pinchPos.x,        -0.2f,         0.2f, 0, 800);
+			cursor.y = map(pinchPos.y,  0.312254f/2, -0.312254f/2, 0, 600);
+			panel->setPointerPosition(cursor);
+
+			const float pinchStrength = datamap.getFloat("pinchStrength");
+			panel->setPointerButtonPressed(BTN_LEFT, pinchStrength > 0.9f);
 		}
 		return false;
 	};

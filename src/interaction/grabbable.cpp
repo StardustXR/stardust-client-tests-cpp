@@ -80,8 +80,7 @@ bool Grabbable::handInput(const std::string uuid, const StardustXRFusion::HandIn
 }
 
 bool Grabbable::pointerInput(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
-	const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
-	field->distance(&inputHandler, deepestPoint, [&](float distance) {
+	field->distance(&inputHandler, pointer.deepestPoint, [&](float distance) {
 		pointDistance = distance;
 	});
 	if(pointDistance > maxDistance && !xInteract.isActive())

@@ -95,10 +95,9 @@ bool Slider::pointerInput(const std::string uuid, const StardustXRFusion::Pointe
 	const vec2 scroll = datamap.getVec2("scroll");
 	xInteract.input(select > 0.9f);
 	xActive.input(xInteract.isActive() || scroll.y != 0);
-	const vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 	
 	if(xInteract.isActive()) {
-		setSliderPos(deepestPoint.x);
+		setSliderPos(pointer.deepestPoint.x);
 		return true;
 	} else if(scroll.y != 0.0f) {
 		this->scroll = scroll.y;
