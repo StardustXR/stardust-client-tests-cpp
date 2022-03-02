@@ -3,7 +3,7 @@
 #include <thread>
 
 #include <stardustxr/fusion/fusion.hpp>
-#include <stardustxr/fusion/types/model.hpp>
+#include <stardustxr/fusion/types/drawable/model.hpp>
 
 #include "physics/physicsbody.hpp"
 

@@ -7,7 +7,7 @@
 using namespace SKMath;
 
 PanelItemUI::PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t pixelWidth, uint32_t pixelHeight, float width, float thickness) :
-Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.025f),
+Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.1f),
 panel(item),
 width(width),
 thickness(thickness),

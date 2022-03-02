@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stardustxr/fusion/types/spatial.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 class PhysicsBody {
 public:

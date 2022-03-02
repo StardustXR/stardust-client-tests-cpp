@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stardustxr/fusion/fusion.hpp>
-#include <stardustxr/fusion/types/spatial.hpp>
-#include <stardustxr/fusion/types/model.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
+#include <stardustxr/fusion/types/drawable/model.hpp>
 #include <stardustxr/fusion/types/fields/field.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 

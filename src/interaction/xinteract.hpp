@@ -3,7 +3,7 @@
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 #include <stardustxr/fusion/types/fields/spherefield.hpp>
-#include <stardustxr/fusion/types/spatial.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 class XInteract {
 public:

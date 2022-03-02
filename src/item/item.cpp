@@ -1,6 +1,6 @@
 #include "item.hpp"
 #include <stardustxr/fusion/types/fields/field.hpp>
-#include <stardustxr/fusion/types/spatial.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 using namespace SKMath;
 

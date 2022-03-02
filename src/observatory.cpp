@@ -1,6 +1,6 @@
 #include <stardustxr/fusion/fusion.hpp>
 
-#include <stardustxr/fusion/types/model.hpp>
+#include <stardustxr/fusion/types/drawable/model.hpp>
 
 using namespace StardustXRFusion;
 

@@ -3,8 +3,8 @@
 #include <flatbuffers/flexbuffers.h>
 
 #include <stardustxr/fusion/sk_math.hpp>
-#include <stardustxr/fusion/types/model.hpp>
-#include <stardustxr/fusion/types/spatial.hpp>
+#include <stardustxr/fusion/types/drawable/model.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/datamap.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>

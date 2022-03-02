@@ -4,7 +4,7 @@
 #include <stardustxr/fusion/types/input/datamap.hpp>
 #include <stardustxr/fusion/types/input/types/handinput.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
-#include <stardustxr/fusion/types/spatial.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 #include "grabbable.hpp"
 #include "xinteract.hpp"

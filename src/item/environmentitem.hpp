@@ -4,7 +4,7 @@
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/fields/spherefield.hpp>
 #include <stardustxr/fusion/types/items/types/environment.hpp>
-#include <stardustxr/fusion/types/model.hpp>
+#include <stardustxr/fusion/types/drawable/model.hpp>
 
 class EnvironmentItemUI : public Grabbable {
 public:

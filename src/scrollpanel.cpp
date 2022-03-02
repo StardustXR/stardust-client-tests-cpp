@@ -1,5 +1,5 @@
 #include <stardustxr/fusion/fusion.hpp>
-#include <stardustxr/fusion/types/model.hpp>
+#include <stardustxr/fusion/types/drawable/model.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>

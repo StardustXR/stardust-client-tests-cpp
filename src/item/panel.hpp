@@ -4,7 +4,7 @@
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/items/types/panel.hpp>
-#include <stardustxr/fusion/types/model.hpp>
+#include <stardustxr/fusion/types/drawable/model.hpp>
 
 class PanelItemUI : public Grabbable {
 public:

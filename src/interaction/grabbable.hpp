@@ -2,7 +2,7 @@
 
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/sk_math.hpp>
-#include <stardustxr/fusion/types/spatial.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include <stardustxr/fusion/types/fields/field.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
 

@@ -3,12 +3,12 @@
 #include "../dbus/player.hpp"
 #include "grabbable.hpp"
 #include "slider.hpp"
-#include <stardustxr/fusion/types/spatial.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include <string>
 
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/sk_math.hpp>
-#include <stardustxr/fusion/types/model.hpp>
+#include <stardustxr/fusion/types/drawable/model.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 
 class MediaPlayer {

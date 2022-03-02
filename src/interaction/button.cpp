@@ -1,4 +1,4 @@
-#include <stardustxr/fusion/types/spatial.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include "button.hpp"
 
 using namespace StardustXRFusion;
