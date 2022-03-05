@@ -85,13 +85,14 @@ int main(int, char *[]) {
 		inputHandler.update();
 		if(!inRangeAction->activelyActing.empty()) {
 			InputActionHandler::InputMethod *firstInputMethod = inRangeAction->activelyActing.begin().base();
-
 		}
 	});
 
 	panelAcceptor.itemCapturedMethod = [&crt](PanelItem &panelItem, PanelItem::Data data) {
-		if(panel && panel->getNodeName() != panelItem.getNodeName())
+		if(panel && *panel != panelItem) {
+			panel->setPose(pose_t{vec3{0, -0.25f, -0.4f}, quat_identity});
 			panel->release();
+		}
 		panel = new PanelItem(panelItem);
 		panel->applySurfaceMaterial(crt, 7);
 		panel->resize(800, 600);

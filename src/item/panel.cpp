@@ -7,7 +7,7 @@
 using namespace SKMath;
 
 PanelItemUI::PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t pixelWidth, uint32_t pixelHeight, float width, float thickness) :
-Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.1f),
+Grabbable(item, StardustXRFusion::Field::Empty(), 0.1f),
 panel(item),
 width(width),
 thickness(thickness),
@@ -15,7 +15,6 @@ model(this, "../res/item/panelitem.glb", vec3_zero, quat_identity, vec3{width, w
 boxField(this, vec3_zero, quat_identity, vec3{width, width * pixelHeight / pixelWidth, thickness}) {
 	setField(&boxField);
 	item.applySurfaceMaterial(model, 0);
-	item.setSpatialParent(this);
 	inputHandler.actions["close"] = [this]() {
 		panel.close();
 	};
@@ -36,4 +35,17 @@ void PanelItemUI::update() {
 		model.setScale(  vec3{width, width * pixelHeight / pixelWidth, thickness});
 		boxField.setSize(vec3{width, width * pixelHeight / pixelWidth, thickness});
 	});
+}
+
+void PanelItemUI::resetPose() {
+	panel.setSpatialParentInPlace(nullptr);
+	this->setSpatialParent(&panel);
+	this->setPose(pose_t{vec3_zero, quat_identity});
+	this->setSpatialParentInPlace(nullptr);
+	panel.setSpatialParentInPlace(this);
+}
+
+void PanelItemUI::setEnabled(bool enabled) {
+	inputHandler.setEnabled(enabled);
+	model.setEnabled(enabled);
 }

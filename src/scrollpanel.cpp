@@ -75,7 +75,12 @@ int main() {
 		panel = new PanelItem(panelItem);
 		panel->applySurfaceMaterial(center, 0);
 		panel->setKeymap(keymapString);
+	}, [&](PanelItem &item) {
+
+	}, [&](PanelItem &item, PanelItem::Data data) {
+
 	}, [&](PanelItem &panelItem) {
+
 	});
 
 	OnLogicStep([&](double, double) {

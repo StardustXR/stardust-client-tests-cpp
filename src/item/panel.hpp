@@ -13,6 +13,9 @@ public:
 	void update();
 	StardustXRFusion::PanelItem panel;
 
+	void resetPose();
+	void setEnabled(bool enabled);
+
 protected:
 	uint32_t pixelWidth;
 	uint32_t pixelHeight;

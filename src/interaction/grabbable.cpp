@@ -26,6 +26,19 @@ Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, StardustXRFu
 	setSpatialParent(&inputHandler);
 }
 
+Grabbable::Grabbable(Spatial &root, StardustXRFusion::Field &field, float maxDistance) :
+		Spatial(root),
+		inputHandler(nullptr, field, vec3_zero, quat_identity) {
+
+	inputHandler.handHandlerMethod = std::bind(&Grabbable::handInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	inputHandler.pointerHandlerMethod = std::bind(&Grabbable::pointerInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
+	this->maxDistance = maxDistance;
+	this->field = &field;
+
+	setSpatialParent(&inputHandler);
+}
+
 void Grabbable::update() {
 	if(xInteract.hasActiveChanged())
 		setZoneable(!xInteract.isActive());
