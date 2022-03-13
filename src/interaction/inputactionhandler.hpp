@@ -5,25 +5,26 @@
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
 #include <stardustxr/fusion/types/fields/field.hpp>
 
+#include <memory>
+
 using namespace StardustXRFusion;
 
 class InputActionHandler : public InputHandler {
 public:
 	struct InputMethod {
+		InputMethod(const std::string uuid, const Datamap datamap, PointerInput *pointer, HandInput *hand);
+		InputMethod(const InputMethod &copyFrom);
+
 		std::string uuid;
 		Datamap datamap;
+		std::unique_ptr<PointerInput> pointer;
+		std::unique_ptr<HandInput> hand;
 
-		bool operator<(const InputMethod& other) {
-			return uuid < other.uuid;
-		}
+		void operator=(const InputMethod &other);
+		bool operator<(const InputMethod &other);
+		bool operator==(const std::string &uuid);
 	};
 
-	struct PointerInputMethod : InputMethod {
-		PointerInput pointer;
-	};
-	struct HandInputMethod : InputMethod {
-		HandInput hand;
-	};
 
 	struct Action {
 		bool captureOnTrigger = true;

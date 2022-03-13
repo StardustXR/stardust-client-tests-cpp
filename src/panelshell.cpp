@@ -47,7 +47,7 @@ int main(int, char *[]) {
 			return pinchPos.z > 0 && hand.distance < maxDistance;
 		}
 	});
-	InputActionHandler::Action *inRangeAction= inputHandler.inputActions.begin().base();
+	InputActionHandler::Action *inRangeAction = &inputHandler.inputActions[0];
 
 	float scrollMultiplier = 5;
 //	inputHandler.pointerHandlerMethod = [&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
@@ -83,8 +83,34 @@ int main(int, char *[]) {
 
 	StardustXRFusion::OnLogicStep([&](double delta, double) {
 		inputHandler.update();
-		if(!inRangeAction->activelyActing.empty()) {
-			InputActionHandler::InputMethod *firstInputMethod = inRangeAction->activelyActing.begin().base();
+		if(!panel)
+			return;
+		for(InputActionHandler::InputMethod &input : inRangeAction->activelyActing) {
+			vec2 cursor = vec2_zero;
+
+			PointerInput *pointer = input.pointer.get();
+			if(pointer) {
+				cursor.x = map(pointer->deepestPoint.x,        -0.2f,         0.2f, 0, 800);
+				cursor.y = map(pointer->deepestPoint.y,  0.312254f/2, -0.312254f/2, 0, 600);
+				panel->setPointerPosition(cursor);
+
+				const float selectPressed = input.datamap.getFloat("select");
+				panel->setPointerButtonPressed(BTN_LEFT, selectPressed > 0.9f);
+
+				const vec2 scroll = input.datamap.getVec2("scroll");
+				panel->scrollPointerAxis(0, scroll.x * scrollMultiplier, scroll.y * scrollMultiplier, (int32_t) scroll.x, (int32_t) scroll.y);
+			}
+
+			HandInput *hand = input.hand.get();
+			if(hand) {
+				const vec3 pinchPos = (hand->thumb().tip().pose.position + hand->index().tip().pose.position) * 0.5f;
+				cursor.x = map(pinchPos.x,        -0.2f,         0.2f, 0, 800);
+				cursor.y = map(pinchPos.y,  0.312254f/2, -0.312254f/2, 0, 600);
+				panel->setPointerPosition(cursor);
+
+				const float pinchStrength = input.datamap.getFloat("pinchStrength");
+				panel->setPointerButtonPressed(BTN_LEFT, pinchStrength > 0.9f);
+			}
 		}
 	});
 
@@ -98,7 +124,9 @@ int main(int, char *[]) {
 		panel->resize(800, 600);
 		panel->setPointerActive(true);
 	};
-	panelAcceptor.itemReleasedMethod = [](PanelItem &panel) {
+	panelAcceptor.itemReleasedMethod = [&](PanelItem &releasedPanel) {
+		if(panel && *panel == releasedPanel)
+			panel = nullptr;
 	};
 
 	StardustXRFusion::StallMainThread();

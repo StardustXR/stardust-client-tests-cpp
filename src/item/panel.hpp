@@ -13,7 +13,6 @@ public:
 	void update();
 	StardustXRFusion::PanelItem panel;
 
-	void resetPose();
 	void setEnabled(bool enabled);
 
 protected:

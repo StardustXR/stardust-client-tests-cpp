@@ -19,30 +19,19 @@ boxField(this, vec3_zero, quat_identity, vec3{width, width * pixelHeight / pixel
 		panel.close();
 	};
 	inputHandler.updateActions();
+	onStoppedGrabbing = [this]() {
+		panel.triggerAccept();
+	};
 }
 
 void PanelItemUI::update() {
 	Grabbable::update();
-	if(xInteract.hasActiveChanged()) {
-		if(!xInteract.isActive())
-			panel.triggerAccept();
-//		else
-//			panel.release();
-	}
 	panel.getData([this](StardustXRFusion::PanelItem::Data data) {
 		pixelWidth = data.width;
 		pixelHeight = data.height;
 		model.setScale(  vec3{width, width * pixelHeight / pixelWidth, thickness});
 		boxField.setSize(vec3{width, width * pixelHeight / pixelWidth, thickness});
 	});
-}
-
-void PanelItemUI::resetPose() {
-	panel.setSpatialParentInPlace(nullptr);
-	this->setSpatialParent(&panel);
-	this->setPose(pose_t{vec3_zero, quat_identity});
-	this->setSpatialParentInPlace(nullptr);
-	panel.setSpatialParentInPlace(this);
 }
 
 void PanelItemUI::setEnabled(bool enabled) {

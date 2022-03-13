@@ -10,14 +10,14 @@ item(item) {
 	item->setSpatialParent(this);
 	inputHandler.setEnabled(false);
 	item->getTransform(nullptr, [this](vec3 pos, quat rot, vec3 scl) {
-		this->setPose({pos, rot});
+//		this->setPose({pos, rot});
 		inputHandler.setEnabled(true);
 	});
 }
 
-bool GrabbableItemUI::isGrabbing() {
-	return Grabbable::isActive();
-}
-bool GrabbableItemUI::grabbingChanged() {
-	return Grabbable::activeChanged();
-}
+//bool GrabbableItemUI::isGrabbing() {
+//	return Grabbable::isActive();
+//}
+//bool GrabbableItemUI::grabbingChanged() {
+//	return Grabbable::activeChanged();
+//}

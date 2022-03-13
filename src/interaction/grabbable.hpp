@@ -4,34 +4,36 @@
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include <stardustxr/fusion/types/fields/field.hpp>
-#include <stardustxr/fusion/types/input/inputhandler.hpp>
 
+#include "inputactionhandler.hpp"
 #include "xinteract.hpp"
+
+#include <memory>
 
 class Grabbable : public StardustXRFusion::Spatial {
 public:
+	explicit Grabbable(Spatial root, StardustXRFusion::Field &field, float maxDistance = 0.01f);
 	explicit Grabbable(SKMath::vec3 origin, SKMath::quat orientation, StardustXRFusion::Field &field, float maxDistance = 0.01f);
-	explicit Grabbable(Spatial &root, StardustXRFusion::Field &field, float maxDistance = 0.01f);
 
 	void update();
 	void setField(StardustXRFusion::Field *field);
 
-	bool isActive();
-	bool activeChanged();
+	std::function<void(void)> onStartedGrabbing = [](){};
+	std::function<void(void)> onStoppedGrabbing = [](){};
 
 	float maxDistance;
 
-	StardustXRFusion::InputHandler inputHandler;
+	InputActionHandler inputHandler;
+	InputActionHandler::Action *grabAction;
 protected:
-	bool handInput(std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
-	bool pointerInput(std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
-	void grab(SKMath::matrix grabMat);
+	bool pointerGrabbingCondition(const std::string uuid, const PointerInput &pointer, const Datamap &datamap);
+	bool handGrabbingCondition(const std::string uuid, const HandInput &hand, const Datamap &datamap);
 
-	XInteract xInteract;
-	SKMath::matrix startItemMat;
-	SKMath::matrix startGrabMat;
-	float pinchDistance = 0.0f;
-	float pointDistance = 0.0f;
+	std::string grabbingInputUUID;
+	std::map<std::string, float> grabbingInputDistances;
+	Spatial grabSpace;
+	Spatial scrollSpace;
+	float scrollDistance = 0;
 
 	StardustXRFusion::Field *field;
 };

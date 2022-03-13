@@ -21,7 +21,6 @@ int main(int argc, char *argv[]) {
 	}, [&](PanelItem &item) {
 		panels[item]->setEnabled(false);
 	}, [&](PanelItem &item, PanelItem::Data data) {
-//		panels[item]->resetPose();
 		panels[item]->setEnabled(true);
 	}, [&](PanelItem &item) {
 		panels.erase(item);

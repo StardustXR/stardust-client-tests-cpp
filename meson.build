@@ -72,6 +72,13 @@ executable('inputactions',
         dependencies: dependencies,
 )
 
+executable('inputbenchmark',
+        'src/inputbenchmark.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        dependencies: dependencies,
+)
+
 executable('mediaplayer',
         'src/mediaplayer.cpp',
         include_directories: includes,
