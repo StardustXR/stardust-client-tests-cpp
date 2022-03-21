@@ -10,6 +10,7 @@
 #include "interaction/xinteract.hpp"
 
 #include <stardustxr/fusion/fusion.hpp>
+#include <stardustxr/fusion/types/data/receiver.hpp>
 #include <stardustxr/fusion/types/drawable/model.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
@@ -35,6 +36,34 @@ int main(int, char *[]) {
 	Spatial screenCenter = Spatial::create(&root, vec3{0, 0.27f, -0.004927f});
 	BoxField inputField(&screenCenter, vec3_zero, quat_identity, vec3{0.4f, 0.312254f, 0.022191f});
 	InputActionHandler inputHandler(&screenCenter, inputField, vec3_zero, quat_identity);
+	NonSpatialReceiver keyReceiver(&screenCenter, inputField);
+
+	keyReceiver.setMask([&](flexbuffers::Builder &fbb) {
+		fbb.String("type", "keyboard");
+	});
+
+	keyReceiver.onDataReceived = [&](std::string senderUUID, flexbuffers::Reference ref) {
+		if(panel && ref.IsMap()) {
+			flexbuffers::Map map = ref.AsMap();
+
+			if(map["keymap"].IsString())
+				panel->setKeymap(map["keymap"].AsString().str());
+			if(map["pressed"].IsUInt())
+				panel->setKeyState(map["pressed"].AsUInt32(), true);
+			if(map["released"].IsUInt())
+				panel->setKeyState(map["released"].AsUInt32(), false);
+
+			if(map["modifiers"].IsMap()) {
+				flexbuffers::Map modMap = map["modifiers"].AsMap();
+
+				panel->setKeyModStates(
+					modMap["depressed"].AsUInt32(),
+					modMap["latched"].AsUInt32(),
+					modMap["locked"].AsUInt32(),
+					modMap["group"].AsUInt32());
+			}
+		}
+	};
 
 	float maxDistance = 0.005f;
 	inputHandler.inputActions.push_back(InputActionHandler::Action{
@@ -50,37 +79,6 @@ int main(int, char *[]) {
 	InputActionHandler::Action *inRangeAction = &inputHandler.inputActions[0];
 
 	float scrollMultiplier = 5;
-//	inputHandler.pointerHandlerMethod = [&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
-//			vec2 cursor;
-//			cursor.x = map(pointer.deepestPoint.x,        -0.2f,         0.2f, 0, 800);
-//			cursor.y = map(pointer.deepestPoint.y,  0.312254f/2, -0.312254f/2, 0, 600);
-//			panel->setPointerPosition(cursor);
-
-//			const float selectPressed = datamap.getFloat("select");
-//			panel->setPointerButtonPressed(BTN_LEFT, selectPressed > 0.9f);
-
-//			const vec2 scroll = datamap.getVec2("scroll");
-//			panel->scrollPointerAxis(0, scroll.x * scrollMultiplier, scroll.y * scrollMultiplier, (int32_t) scroll.x, (int32_t) scroll.y);
-//		}
-//		return false;
-//	};
-//	inputHandler.handHandlerMethod = [&](const std::string uuid, const HandInput &hand, const Datamap &datamap) {
-//		if(panel == nullptr || hand.distance > maxDistance)
-//			return false;
-
-//		const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
-//		if(pinchPos.z > 0 && hand.distance < maxDistance) {
-//			vec2 cursor;
-//			cursor.x = map(pinchPos.x,        -0.2f,         0.2f, 0, 800);
-//			cursor.y = map(pinchPos.y,  0.312254f/2, -0.312254f/2, 0, 600);
-//			panel->setPointerPosition(cursor);
-
-//			const float pinchStrength = datamap.getFloat("pinchStrength");
-//			panel->setPointerButtonPressed(BTN_LEFT, pinchStrength > 0.9f);
-//		}
-//		return false;
-//	};
-
 	StardustXRFusion::OnLogicStep([&](double delta, double) {
 		inputHandler.update();
 		if(!panel)
@@ -123,6 +121,7 @@ int main(int, char *[]) {
 		panel->applySurfaceMaterial(crt, 7);
 		panel->resize(800, 600);
 		panel->setPointerActive(true);
+		panel->setKeyboardActive(true);
 	};
 	panelAcceptor.itemReleasedMethod = [&](PanelItem &releasedPanel) {
 		if(panel && *panel == releasedPanel)

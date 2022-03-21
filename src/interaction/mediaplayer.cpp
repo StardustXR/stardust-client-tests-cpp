@@ -19,11 +19,6 @@ scrub(&body, 0.067f, 0, 1, 0.002f, 0.01f, color_from_hsva(0, 1, 1, 1)) {
 	});
 
 	boxField.setSpatialParent(&root);
-
-	root.inputHandler.actions["Play/Pause"] = [this] {
-		this->mediaPlayer.playPause();
-	};
-	root.inputHandler.updateActions();
 }
 
 void MediaPlayer::update(double delta) {

@@ -7,7 +7,7 @@
 using namespace SKMath;
 
 PanelItemUI::PanelItemUI(StardustXRFusion::PanelItem &item, uint32_t pixelWidth, uint32_t pixelHeight, float width, float thickness) :
-Grabbable(item, StardustXRFusion::Field::Empty(), 0.1f),
+Grabbable(item, StardustXRFusion::Field::Empty(), 0.01f),
 panel(item),
 width(width),
 thickness(thickness),
@@ -15,10 +15,6 @@ model(this, "../res/item/panelitem.glb", vec3_zero, quat_identity, vec3{width, w
 boxField(this, vec3_zero, quat_identity, vec3{width, width * pixelHeight / pixelWidth, thickness}) {
 	setField(&boxField);
 	item.applySurfaceMaterial(model, 0);
-	inputHandler.actions["close"] = [this]() {
-		panel.close();
-	};
-	inputHandler.updateActions();
 	onStoppedGrabbing = [this]() {
 		panel.triggerAccept();
 	};

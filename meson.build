@@ -2,8 +2,9 @@ project('stardustxr-client-tests', 'cpp', default_options : ['cpp_std=c++17'])
 includes = include_directories('include')
 
 fusion = dependency('stardustxr-fusion')
-dbus = dependency('sdbus-c++')
+dbus = dependency('sdbus-c++', required : false)
 xcb = dependency('xcb')
+xcb_xinput = dependency('xcb-xinput')
 xkb = dependency('xkbcommon')
 xkb_x11 = dependency('xkbcommon-x11')
 
@@ -25,13 +26,6 @@ executable('axes',
 
 executable('basicbody',
 	'src/basicbody.cpp',
-	include_directories: includes,
-	link_whole: sublibs,
-	dependencies: dependencies,
-)
-
-executable('directactions',
-	'src/directactions.cpp',
 	include_directories: includes,
 	link_whole: sublibs,
 	dependencies: dependencies,
@@ -65,6 +59,14 @@ executable('floor',
         dependencies: dependencies,
 )
 
+executable('hostkeyboard',
+        'src/hostkeyboard.cpp',
+        include_directories: includes,
+        link_whole: sublibs,
+        link_args: '-lflatbuffers',
+        dependencies: [dependencies, xcb, xcb_xinput, xkb, xkb_x11],
+)
+
 executable('inputactions',
         'src/inputactions.cpp',
         include_directories: includes,
@@ -79,6 +81,7 @@ executable('inputbenchmark',
         dependencies: dependencies,
 )
 
+if dbus.found()
 executable('mediaplayer',
         'src/mediaplayer.cpp',
         include_directories: includes,
@@ -88,6 +91,7 @@ executable('mediaplayer',
                 dbus,
         ],
 )
+endif
 
 executable('observatory',
         'src/observatory.cpp',
@@ -99,6 +103,7 @@ executable('observatory',
 executable('panelshell',
         'src/panelshell.cpp',
         include_directories: includes,
+        link_args: '-lflatbuffers',
         link_whole: sublibs,
         dependencies: dependencies,
 )

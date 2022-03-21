@@ -27,14 +27,6 @@ Slider::Slider(Spatial *parent, float length, float minValue, float maxValue, fl
 	this->length = length;
 	this->barThickness = barThickness;
 	this->orbDiameter = orbDiameter;
-
-	inputHandler.actions["+10%"] = [this] {
-		this->setSliderValue(value+((this->maxValue-this->minValue)*0.1f));
-	};
-	inputHandler.actions["-10%"] = [this] {
-		this->setSliderValue(value-((this->maxValue-this->minValue)*0.1f));
-	};
-	inputHandler.updateActions();
 }
 
 Slider::~Slider() {}

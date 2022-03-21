@@ -19,11 +19,17 @@ Grabbable::Grabbable(Spatial root, StardustXRFusion::Field &field, float maxDist
 		scrollSpace(Spatial::create(&grabSpace)) {
 
 	inputHandler.inputActions.push_back(InputActionHandler::Action {
+		.captureOnTrigger = false,
+		.pointerActiveCondition = [&](const std::string, const PointerInput &, const Datamap &) { return true; },
+		.handActiveCondition = [&](const std::string, const HandInput &, const Datamap &) { return true; },
+	});
+	inRangeAction = &inputHandler.inputActions[0];
+	inputHandler.inputActions.push_back(InputActionHandler::Action {
 		.captureOnTrigger = true,
 		.pointerActiveCondition = std::bind(&Grabbable::pointerGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
 		.handActiveCondition = std::bind(&Grabbable::handGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
 	});
-	grabAction = inputHandler.inputActions.begin().base();
+	grabAction = &inputHandler.inputActions[1];
 
 	this->maxDistance = maxDistance;
 	this->field = &field;
@@ -38,17 +44,22 @@ bool Grabbable::pointerGrabbingCondition(const std::string uuid, const PointerIn
 		grabbingInputDistances[uuid] = distance;
 	});
 
+	bool previouslyGrabbed = std::find(grabAction->activelyActing.begin(), grabAction->activelyActing.end(), uuid) != grabAction->activelyActing.end();
+	if(!previouslyGrabbed && grabbingInputDistances[uuid] > maxDistance)
+		return false;
+
 	const float context = datamap.getFloat("context");
 	return context > 0.9f && grabbingInputDistances.count(uuid) > 0 && grabbingInputDistances[uuid] < maxDistance;
 }
 bool Grabbable::handGrabbingCondition(const std::string uuid, const HandInput &hand, const Datamap &datamap) {
-	const SKMath::vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
-	field->distance(&inputHandler, pinchPos, [this, uuid](float distance) {
-		grabbingInputDistances[uuid] = distance;
-	});
+	bool previouslyGrabbed = std::find(grabAction->activelyActing.begin(), grabAction->activelyActing.end(), uuid) != grabAction->activelyActing.end();
+	if(!previouslyGrabbed && hand.distance > maxDistance)
+		return false;
 
+//	bool previouslyInRange = std::find(inRangeAction->activelyActing.begin(), inRangeAction->activelyActing.end(), uuid) != inRangeAction->activelyActing.end();
 	const float pinchStrength = datamap.getFloat("pinchStrength");
-	return pinchStrength > 0.9f && grabbingInputDistances.count(uuid) > 0 && grabbingInputDistances[uuid] < maxDistance;
+	const float grabStrength = datamap.getFloat("grabStrength");
+	return /*previouslyInRange &&*/ pinchStrength > 0.9f && grabStrength < 0.1f;
 }
 
 void Grabbable::update() {

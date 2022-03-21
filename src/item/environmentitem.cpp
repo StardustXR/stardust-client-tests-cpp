@@ -13,12 +13,4 @@ model(this, "../res/item/skyball.glb", vec3_zero, quat_identity, vec3_one * size
 sphereField(this, vec3_zero, size / 2) {
 	setField(&sphereField);
 	model.setMaterialProperty(0, "diffuse", data.path);
-
-	inputHandler.actions["setSkytex"] = [data] {
-		StardustXRFusion::SetSkytex(data.path);
-	};
-	inputHandler.actions["setSkylight"] = [data] {
-		StardustXRFusion::SetSkylight(data.path);
-	};
-	inputHandler.updateActions();
 }
