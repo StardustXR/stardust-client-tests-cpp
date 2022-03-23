@@ -4,8 +4,9 @@
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
-#include "interaction/inputactionhandler.hpp"
+#include <stardustxr/fusion/types/input/inputactionhandler.hpp>
 
+using namespace StardustXRFusion;
 using namespace SKMath;
 
 int main() {
@@ -17,7 +18,7 @@ int main() {
 	BoxField box(StardustXRFusion::Root(), vec3_zero, quat_identity, vec3_one * 0.25f);
 	InputActionHandler inputHandler(StardustXRFusion::Root(), box, vec3_zero, quat_identity);
 
-	inputHandler.inputActions.push_back(InputActionHandler::Action {
+	inputHandler.actions.push_back(InputActionHandler::Action {
 		false,
 		[&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
 			gettimeofday(&tv, nullptr);
@@ -30,7 +31,7 @@ int main() {
 			return hand.distance < 0;
 		}
 	});
-	InputActionHandler::Action *action = &inputHandler.inputActions[0];
+	InputActionHandler::Action *action = &inputHandler.actions[0];
 
 	StardustXRFusion::OnLogicStep([&](double, double) {
 		inputHandler.update();

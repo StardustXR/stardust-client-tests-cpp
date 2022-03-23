@@ -13,11 +13,10 @@
 #include <stardustxr/fusion/types/data/receiver.hpp>
 #include <stardustxr/fusion/types/drawable/model.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
-#include <stardustxr/fusion/types/input/inputhandler.hpp>
+#include <stardustxr/fusion/types/input/inputactionhandler.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
 #include <stardustxr/fusion/types/input/types/handinput.hpp>
 #include <stardustxr/fusion/types/items/acceptors/panel.hpp>
-#include "interaction/inputactionhandler.hpp"
 
 using namespace StardustXRFusion;
 using namespace SKMath;
@@ -66,7 +65,7 @@ int main(int, char *[]) {
 	};
 
 	float maxDistance = 0.005f;
-	inputHandler.inputActions.push_back(InputActionHandler::Action{
+	inputHandler.actions.push_back(InputActionHandler::Action{
 		false,
 		[maxDistance](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
 			return pointer.origin.z > 0 && pointer.distance < maxDistance;
@@ -76,7 +75,7 @@ int main(int, char *[]) {
 			return pinchPos.z > 0 && hand.distance < maxDistance;
 		}
 	});
-	InputActionHandler::Action *inRangeAction = &inputHandler.inputActions[0];
+	InputActionHandler::Action *inRangeAction = &inputHandler.actions[0];
 
 	float scrollMultiplier = 5;
 	StardustXRFusion::OnLogicStep([&](double delta, double) {

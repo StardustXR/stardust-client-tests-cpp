@@ -3,11 +3,9 @@
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/types/drawable/model.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
-#include <stardustxr/fusion/types/input/inputhandler.hpp>
+#include <stardustxr/fusion/types/input/inputactionhandler.hpp>
 #include <stardustxr/fusion/types/input/types/handinput.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
-
-#include "interaction/inputactionhandler.hpp"
 
 using namespace StardustXRFusion;
 using namespace SKMath;
@@ -21,7 +19,7 @@ int main(int, char *[]) {
 
 	BoxField field(&root, vec3_zero, quat_identity, vec3_one * size);
 	InputActionHandler handler(&root, field, vec3_zero, quat_identity);
-	handler.inputActions.push_back(InputActionHandler::Action{
+	handler.actions.push_back(InputActionHandler::Action{
 		false,
 		[](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
 			return datamap.getFloat("select") > 0.5f;
@@ -30,7 +28,7 @@ int main(int, char *[]) {
 			return datamap.getFloat("pinchStrength") > 0.5f;
 		}
 	});
-	InputActionHandler::Action *action = &handler.inputActions[0];
+	InputActionHandler::Action *action = &handler.actions[0];
 
 	OnLogicStep([&](double delta, double) {
 		handler.update();

@@ -18,18 +18,18 @@ Grabbable::Grabbable(Spatial root, StardustXRFusion::Field &field, float maxDist
 		grabSpace(Spatial::create(Root())),
 		scrollSpace(Spatial::create(&grabSpace)) {
 
-	inputHandler.inputActions.push_back(InputActionHandler::Action {
+	inputHandler.actions.push_back(InputActionHandler::Action {
 		.captureOnTrigger = false,
 		.pointerActiveCondition = [&](const std::string, const PointerInput &, const Datamap &) { return true; },
 		.handActiveCondition = [&](const std::string, const HandInput &, const Datamap &) { return true; },
 	});
-	inRangeAction = &inputHandler.inputActions[0];
-	inputHandler.inputActions.push_back(InputActionHandler::Action {
+	inRangeAction = &inputHandler.actions[0];
+	inputHandler.actions.push_back(InputActionHandler::Action {
 		.captureOnTrigger = true,
 		.pointerActiveCondition = std::bind(&Grabbable::pointerGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
 		.handActiveCondition = std::bind(&Grabbable::handGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
 	});
-	grabAction = &inputHandler.inputActions[1];
+	grabAction = &inputHandler.actions[1];
 
 	this->maxDistance = maxDistance;
 	this->field = &field;
