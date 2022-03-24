@@ -65,24 +65,21 @@ int main(int, char *[]) {
 	};
 
 	float maxDistance = 0.005f;
-	inputHandler.actions.push_back(InputActionHandler::Action{
-		false,
-		[maxDistance](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
-			return pointer.origin.z > 0 && pointer.distance < maxDistance;
-		},
-		[maxDistance](const std::string uuid, const HandInput &hand, const Datamap &datamap){
-			const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
-			return pinchPos.z > 0 && hand.distance < maxDistance;
-		}
-	});
-	InputActionHandler::Action *inRangeAction = &inputHandler.actions[0];
+	InputActionHandler::Action inRangeAction(false);
+	inRangeAction.pointerActiveCondition = [maxDistance](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
+		return pointer.origin.z > 0 && pointer.distance < maxDistance;
+	};
+	inRangeAction.handActiveCondition = [maxDistance](const std::string uuid, const HandInput &hand, const Datamap &datamap){
+		const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
+		return pinchPos.z > 0 && hand.distance < maxDistance;
+	};
 
 	float scrollMultiplier = 5;
 	StardustXRFusion::OnLogicStep([&](double delta, double) {
 		inputHandler.update();
 		if(!panel)
 			return;
-		for(InputActionHandler::InputMethod &input : inRangeAction->activelyActing) {
+		for(InputActionHandler::InputMethod &input : inRangeAction.activelyActing) {
 			vec2 cursor = vec2_zero;
 
 			PointerInput *pointer = input.pointer.get();

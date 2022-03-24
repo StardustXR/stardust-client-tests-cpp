@@ -20,8 +20,8 @@ public:
 	float maxDistance;
 
 	StardustXRFusion::InputActionHandler inputHandler;
-	StardustXRFusion::InputActionHandler::Action *inRangeAction;
-	StardustXRFusion::InputActionHandler::Action *grabAction;
+	StardustXRFusion::InputActionHandler::Action inRangeAction;
+	StardustXRFusion::InputActionHandler::Action grabAction;
 protected:
 	bool pointerGrabbingCondition(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
 	bool handGrabbingCondition(const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);

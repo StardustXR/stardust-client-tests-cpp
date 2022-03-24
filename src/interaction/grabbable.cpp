@@ -18,18 +18,15 @@ Grabbable::Grabbable(Spatial root, StardustXRFusion::Field &field, float maxDist
 		grabSpace(Spatial::create(Root())),
 		scrollSpace(Spatial::create(&grabSpace)) {
 
-	inputHandler.actions.push_back(InputActionHandler::Action {
-		.captureOnTrigger = false,
-		.pointerActiveCondition = [&](const std::string, const PointerInput &, const Datamap &) { return true; },
-		.handActiveCondition = [&](const std::string, const HandInput &, const Datamap &) { return true; },
-	});
-	inRangeAction = &inputHandler.actions[0];
-	inputHandler.actions.push_back(InputActionHandler::Action {
-		.captureOnTrigger = true,
-		.pointerActiveCondition = std::bind(&Grabbable::pointerGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
-		.handActiveCondition = std::bind(&Grabbable::handGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
-	});
-	grabAction = &inputHandler.actions[1];
+	inRangeAction.captureOnTrigger = false;
+	inRangeAction.pointerActiveCondition = [&](const std::string, const PointerInput &, const Datamap &) { return true; };
+	inRangeAction.handActiveCondition = [&](const std::string, const HandInput &, const Datamap &) { return true; };
+	inputHandler.actions.push_back(&inRangeAction);
+
+	grabAction.captureOnTrigger = true;
+	grabAction.pointerActiveCondition = std::bind(&Grabbable::pointerGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	grabAction.handActiveCondition = std::bind(&Grabbable::handGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	inputHandler.actions.push_back(&grabAction);
 
 	this->maxDistance = maxDistance;
 	this->field = &field;
@@ -44,7 +41,7 @@ bool Grabbable::pointerGrabbingCondition(const std::string uuid, const PointerIn
 		grabbingInputDistances[uuid] = distance;
 	});
 
-	bool previouslyGrabbed = std::find(grabAction->activelyActing.begin(), grabAction->activelyActing.end(), uuid) != grabAction->activelyActing.end();
+	bool previouslyGrabbed = std::find(grabAction.activelyActing.begin(), grabAction.activelyActing.end(), uuid) != grabAction.activelyActing.end();
 	if(!previouslyGrabbed && grabbingInputDistances[uuid] > maxDistance)
 		return false;
 
@@ -52,7 +49,7 @@ bool Grabbable::pointerGrabbingCondition(const std::string uuid, const PointerIn
 	return context > 0.9f && grabbingInputDistances.count(uuid) > 0 && grabbingInputDistances[uuid] < maxDistance;
 }
 bool Grabbable::handGrabbingCondition(const std::string uuid, const HandInput &hand, const Datamap &datamap) {
-	bool previouslyGrabbed = std::find(grabAction->activelyActing.begin(), grabAction->activelyActing.end(), uuid) != grabAction->activelyActing.end();
+	bool previouslyGrabbed = std::find(grabAction.activelyActing.begin(), grabAction.activelyActing.end(), uuid) != grabAction.activelyActing.end();
 	if(!previouslyGrabbed && hand.distance > maxDistance)
 		return false;
 
@@ -64,15 +61,15 @@ bool Grabbable::handGrabbingCondition(const std::string uuid, const HandInput &h
 
 void Grabbable::update() {
 	inputHandler.update();
-	if(grabAction->startedActing.size() > 0) {
+	if(grabAction.startedActing.size() > 0) {
 		if(grabbingInputUUID == "")
 			onStartedGrabbing();
 		else
 			grabbingInputDistances.erase(grabbingInputUUID);
-		grabbingInputUUID = grabAction->startedActing.begin()->uuid;
+		grabbingInputUUID = grabAction.startedActing.begin()->uuid;
 		setSpatialParentInPlace(Root());
 		setZoneable(false); // If anything is actively grabbing this, it shouldn't be zoneable
-	} else if(std::find(grabAction->stoppedActing.begin(), grabAction->stoppedActing.end(), grabbingInputUUID) != grabAction->stoppedActing.end()) {
+	} else if(std::find(grabAction.stoppedActing.begin(), grabAction.stoppedActing.end(), grabbingInputUUID) != grabAction.stoppedActing.end()) {
 		grabbingInputDistances.erase(grabbingInputUUID);
 		grabbingInputUUID = "";
 		setSpatialParentInPlace(Root());
@@ -80,7 +77,7 @@ void Grabbable::update() {
 		onStoppedGrabbing();
 	}
 
-	InputActionHandler::InputMethod *grabbingInput = std::find(grabAction->activelyActing.begin(), grabAction->activelyActing.end(), grabbingInputUUID).base();
+	InputActionHandler::InputMethod *grabbingInput = std::find(grabAction.activelyActing.begin(), grabAction.activelyActing.end(), grabbingInputUUID).base();
 	if(grabbingInput) {
 		if(grabbingInput->hand.get()) {
 			grabSpace.setPose(pose_t{
@@ -100,7 +97,7 @@ void Grabbable::update() {
 			}
 		}
 	}
-	if(grabAction->startedActing.size() > 0)
+	if(grabAction.startedActing.size() > 0)
 		setSpatialParentInPlace(&scrollSpace);
 }
 

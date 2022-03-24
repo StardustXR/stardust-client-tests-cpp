@@ -19,20 +19,19 @@ int main(int, char *[]) {
 
 	BoxField field(&root, vec3_zero, quat_identity, vec3_one * size);
 	InputActionHandler handler(&root, field, vec3_zero, quat_identity);
-	handler.actions.push_back(InputActionHandler::Action{
-		false,
-		[](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
-			return datamap.getFloat("select") > 0.5f;
-		},
-		[](const std::string uuid, const HandInput &hand, const Datamap &datamap){
-			return datamap.getFloat("pinchStrength") > 0.5f;
-		}
-	});
-	InputActionHandler::Action *action = &handler.actions[0];
+
+	InputActionHandler::Action action(false);
+	action.pointerActiveCondition = [](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
+		return datamap.getFloat("select") > 0.5f;
+	};
+	action.handActiveCondition = [](const std::string uuid, const HandInput &hand, const Datamap &datamap){
+		return datamap.getFloat("pinchStrength") > 0.5f;
+	};
+	handler.actions.push_back(&action);
 
 	OnLogicStep([&](double delta, double) {
 		handler.update();
-		for(InputActionHandler::InputMethod &inputMethod : action->startedActing) {
+		for(InputActionHandler::InputMethod &inputMethod : action.startedActing) {
 			printf("Input handler \"%s\" just got in range!\n", inputMethod.uuid.c_str());
 		}
 		fflush(stdout);

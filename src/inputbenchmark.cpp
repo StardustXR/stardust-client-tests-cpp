@@ -18,24 +18,22 @@ int main() {
 	BoxField box(StardustXRFusion::Root(), vec3_zero, quat_identity, vec3_one * 0.25f);
 	InputActionHandler inputHandler(StardustXRFusion::Root(), box, vec3_zero, quat_identity);
 
-	inputHandler.actions.push_back(InputActionHandler::Action {
-		false,
-		[&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
-			gettimeofday(&tv, nullptr);
-			checkTimes[uuid] = tv;
-			return pointer.distance < 0;
-		},
-		[&](const std::string uuid, const HandInput &hand, const Datamap &datamap){
-			gettimeofday(&tv, nullptr);
-			checkTimes[uuid] = tv;
-			return hand.distance < 0;
-		}
-	});
-	InputActionHandler::Action *action = &inputHandler.actions[0];
+	InputActionHandler::Action action(false);
+	action.pointerActiveCondition = [&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
+		gettimeofday(&tv, nullptr);
+		checkTimes[uuid] = tv;
+		return pointer.distance < 0;
+	};
+	action.handActiveCondition = [&](const std::string uuid, const HandInput &hand, const Datamap &datamap){
+		gettimeofday(&tv, nullptr);
+		checkTimes[uuid] = tv;
+		return hand.distance < 0;
+	};
+	inputHandler.actions.push_back(&action);
 
 	StardustXRFusion::OnLogicStep([&](double, double) {
 		inputHandler.update();
-		for(InputActionHandler::InputMethod &input : action->startedActing) {
+		for(InputActionHandler::InputMethod &input : action.startedActing) {
 			timeval t2;
 			gettimeofday(&t2, nullptr);
 			timeval t1 = checkTimes[input.uuid];
