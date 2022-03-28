@@ -21,7 +21,7 @@ using namespace SKMath;
 std::string windowName = "Stardust XR Host Keyboard";
 uint32_t eventTypes = XCB_EVENT_MASK_KEYMAP_STATE | XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE;
 
-std::vector<NonSpatialReceiver> keyboardInputs;
+std::vector<PulseReceiver> keyboardInputs;
 double checkReceiversInterval = 0.5;
 
 int main(int, char *[]) {
@@ -60,14 +60,14 @@ int main(int, char *[]) {
 	xcb_flush(xConnect);
 
 	double elapsedTime = 0;
-	NonSpatialSender keyboard(StardustXRFusion::Root());
+	PulseSender keyboard(StardustXRFusion::Root());
 	StardustXRFusion::OnLogicStep([&](double delta, double) {
 		double oldCheckCount = floor(elapsedTime / checkReceiversInterval);
 		double newCheckCount = floor((elapsedTime / checkReceiversInterval) + delta);
 		if(oldCheckCount < newCheckCount) { //check if
-			keyboard.getReceivers([&](std::vector<NonSpatialReceiver> &receivers) {
+			keyboard.getReceivers([&](std::vector<PulseReceiver> &receivers) {
 				keyboardInputs.clear();
-				for(NonSpatialReceiver receiver : receivers) {
+				for(PulseReceiver receiver : receivers) {
 					receiver.getMask([receiver](flexbuffers::Map mask) {
 						if(mask["type"].AsString().str() == "keyboard") {
 							keyboardInputs.push_back(receiver);
@@ -105,7 +105,7 @@ int main(int, char *[]) {
 								});
 							});
 
-							for(NonSpatialReceiver &receiver : keyboardInputs) {
+							for(PulseReceiver &receiver : keyboardInputs) {
 								receiver.sendData(map);
 							}
 						} break;
@@ -129,7 +129,7 @@ int main(int, char *[]) {
 								});
 							});
 
-							for(NonSpatialReceiver &receiver : keyboardInputs) {
+							for(PulseReceiver &receiver : keyboardInputs) {
 								receiver.sendData(map);
 							}
 						} break;

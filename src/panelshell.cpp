@@ -35,7 +35,7 @@ int main(int, char *[]) {
 	Spatial screenCenter = Spatial::create(&root, vec3{0, 0.27f, -0.004927f});
 	BoxField inputField(&screenCenter, vec3_zero, quat_identity, vec3{0.4f, 0.312254f, 0.022191f});
 	InputActionHandler inputHandler(&screenCenter, inputField, vec3_zero, quat_identity);
-	NonSpatialReceiver keyReceiver(&screenCenter, inputField);
+	PulseReceiver keyReceiver(&screenCenter, inputField);
 
 	keyReceiver.setMask([&](flexbuffers::Builder &fbb) {
 		fbb.String("type", "keyboard");
