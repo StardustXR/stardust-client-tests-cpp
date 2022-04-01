@@ -10,7 +10,6 @@ using namespace StardustXRFusion;
 using namespace SKMath;
 
 Slider::Slider(Spatial *parent, float length, float minValue, float maxValue, float barThickness, float orbDiameter, SKMath::color color) :
-	Spatial(Spatial::create(parent)),
 	base(this, "../res/slider/base.glb", vec3_zero, quat_from_angles(0, 180, 0), {0, barThickness, barThickness}),
 	base_inv(this, "../res/slider/base.glb", {length, 0, 0}, quat_identity, {length, barThickness, barThickness}),
 	orb(this, "../res/slider/orb.glb", vec3_zero, quat_identity, vec3_one * orbDiameter),

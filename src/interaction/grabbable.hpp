@@ -8,17 +8,17 @@
 
 class Grabbable : public StardustXRFusion::Spatial {
 public:
-	explicit Grabbable(Spatial root, StardustXRFusion::Field &field, float maxDistance = 0.005f);
-	explicit Grabbable(SKMath::vec3 origin, SKMath::quat orientation, StardustXRFusion::Field &field, float maxDistance = 0.005f);
+	Grabbable(Spatial root, const StardustXRFusion::Field field, float maxDistance = 0.005f);
+	Grabbable(SKMath::vec3 origin, SKMath::quat orientation, const StardustXRFusion::Field field, float maxDistance = 0.005f);
 
 	void update();
-	void setField(StardustXRFusion::Field *field);
 
 	std::function<void(void)> onStartedGrabbing = [](){};
 	std::function<void(void)> onStoppedGrabbing = [](){};
 
 	float maxDistance;
 
+	StardustXRFusion::Field field;
 	StardustXRFusion::InputActionHandler inputHandler;
 	StardustXRFusion::InputActionHandler::Action inRangeAction;
 	StardustXRFusion::InputActionHandler::Action grabAction;
@@ -31,6 +31,4 @@ protected:
 	StardustXRFusion::Spatial grabSpace;
 	StardustXRFusion::Spatial scrollSpace;
 	float scrollDistance = 0;
-
-	StardustXRFusion::Field *field;
 };

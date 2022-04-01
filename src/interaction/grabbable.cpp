@@ -12,11 +12,12 @@
 using namespace SKMath;
 using namespace StardustXRFusion;
 
-Grabbable::Grabbable(Spatial root, StardustXRFusion::Field &field, float maxDistance) :
-		Spatial(root),
-		inputHandler(nullptr, field, vec3_zero, quat_identity),
-		grabSpace(Spatial::create(Root())),
-		scrollSpace(Spatial::create(&grabSpace)) {
+Grabbable::Grabbable(Spatial root, const Field field, float maxDistance) :
+Spatial(root),
+field(field),
+inputHandler(nullptr, this->field, vec3_zero, quat_identity),
+grabSpace(root),
+scrollSpace(&grabSpace) {
 
 	inRangeAction.captureOnTrigger = false;
 	inRangeAction.pointerActiveCondition = [&](const std::string, const PointerInput &, const Datamap &) { return true; };
@@ -29,15 +30,14 @@ Grabbable::Grabbable(Spatial root, StardustXRFusion::Field &field, float maxDist
 	inputHandler.actions.push_back(&grabAction);
 
 	this->maxDistance = maxDistance;
-	this->field = &field;
 
 	setSpatialParent(&inputHandler);
 }
-Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, StardustXRFusion::Field &field, float maxDistance) :
-		Grabbable(Spatial::create(nullptr, origin, orientation, vec3_one, true, true, false, true), field, maxDistance) {}
+Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, const StardustXRFusion::Field field, float maxDistance) :
+		Grabbable(Spatial(Root(), origin, orientation, vec3_one, true, true, false, true), field, maxDistance) {}
 
 bool Grabbable::pointerGrabbingCondition(const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
-	field->distance(&inputHandler, pointer.deepestPoint, [this, uuid](float distance) {
+	field.distance(&inputHandler, pointer.deepestPoint, [this, uuid](float distance) {
 		grabbingInputDistances[uuid] = distance;
 	});
 
@@ -99,11 +99,6 @@ void Grabbable::update() {
 	}
 	if(grabAction.startedActing.size() > 0)
 		setSpatialParentInPlace(&scrollSpace);
-}
-
-void Grabbable::setField(Field *field) {
-	this->field = field;
-	inputHandler.setField(field);
 }
 
 //bool Grabbable::pointerInput(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {

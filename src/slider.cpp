@@ -29,7 +29,7 @@ int main(int argc, const char* const argv[]) {
 
 	StardustXRFusion::Setup();
 
-	Spatial root = Spatial::create(nullptr, vec3_forward * 0.5f, quat_identity);
+	Spatial root(Root(), vec3_forward * 0.5f, quat_identity);
 	// root.setOrientation(quat_from_angles(180, 180, 0));
 
 	Slider *eqSliders[sliderCount];

@@ -13,7 +13,7 @@ using namespace SKMath;
 int main(int, char *[]) {
 	if(!StardustXRFusion::Setup())
 		return 1;
-	Spatial root = Spatial::create(nullptr, vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
+	Spatial root(Root(), vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
 
 	float size = 0.1f;
 

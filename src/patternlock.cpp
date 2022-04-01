@@ -35,7 +35,7 @@ Orb orbs[patternLockSize][patternLockSize][patternLockSize];
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
-	Spatial root = Spatial::create(nullptr, vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
+	Spatial root(Root(), vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
 
 	for(uint x=0; x<patternLockSize; ++x) {
 		for(uint y=0; y<patternLockSize; ++y) {

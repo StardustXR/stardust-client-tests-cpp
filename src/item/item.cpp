@@ -3,9 +3,10 @@
 #include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 using namespace SKMath;
+using namespace StardustXRFusion;
 
-GrabbableItemUI::GrabbableItemUI(StardustXRFusion::Item *item) :
-Grabbable(vec3_zero, quat_identity, StardustXRFusion::Field::Empty(), 0.05f),
+GrabbableItemUI::GrabbableItemUI(Item *item) :
+Grabbable(vec3_zero, quat_identity, Field::empty, 0.05f),
 item(item) {
 	item->setSpatialParent(this);
 	inputHandler.setEnabled(false);

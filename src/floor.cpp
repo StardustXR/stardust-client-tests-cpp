@@ -16,7 +16,7 @@ using namespace SKMath;
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
 
-	Spatial root = Spatial::create(nullptr, -vec3_up * HEIGHT);
+	Spatial root(Root(), -vec3_up * HEIGHT);
 
 	Model floor(&root, "../res/floor/floor.glb", vec3_zero, quat_identity, vec3_one * SCALE);
 	floor.setMaterialProperty(0, "tex_scale", SCALE);

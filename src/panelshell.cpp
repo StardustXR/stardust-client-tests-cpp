@@ -25,14 +25,14 @@ PanelItem *panel = nullptr;
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
-	Spatial root = Spatial::create(nullptr, vec3{0, -0.5f, -0.5f}, quat_identity, vec3_one, true, true, false, true);
+	Spatial root(Root(), vec3{0, -0.5f, -0.5f}, quat_identity, vec3_one, true, true, false, true);
 
 	Model crt(&root, "../res/panelshell/crt.glb", vec3_zero, quat_from_angles(0, 180, 0));
 
 	BoxField panelAcceptorField(&root, vec3{0, 0.23f, -0.08f}, quat_identity, vec3{0.471f, 0.46f, 0.168f});
 	PanelItemAcceptor panelAcceptor(&root, panelAcceptorField, vec3_zero, quat_identity);
 
-	Spatial screenCenter = Spatial::create(&root, vec3{0, 0.27f, -0.004927f});
+	Spatial screenCenter(&root, vec3{0, 0.27f, -0.004927f});
 	BoxField inputField(&screenCenter, vec3_zero, quat_identity, vec3{0.4f, 0.312254f, 0.022191f});
 	InputActionHandler inputHandler(&screenCenter, inputField, vec3_zero, quat_identity);
 	PulseReceiver keyReceiver(&screenCenter, inputField);

@@ -12,19 +12,15 @@
 using namespace SKMath;
 using namespace StardustXRFusion;
 
-Screen::Screen(SKMath::vec3 origin, SKMath::quat orientation, std::string modelPath, float modelScale, StardustXRFusion::Field &field) :
-		Spatial(Spatial::create(nullptr, origin, orientation)),
+Screen::Screen(Spatial &root, SKMath::vec3 origin, SKMath::quat orientation, std::string modelPath, float modelScale, StardustXRFusion::Field &field) :
+		Spatial(&root, origin, orientation),
 		model(this, modelPath, vec3_zero, quat_identity, vec3_one * modelScale),
+		field(field),
 		inputHandler(nullptr, field, vec3_zero, quat_identity),
 		domeModel(this, "../res/touch_dome.glb", vec3_zero, quat_identity, vec3_one) {
 
 	inputHandler.handHandlerMethod = std::bind(&Screen::handInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	inputHandler.pointerHandlerMethod = std::bind(&Screen::pointerInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-
-	this->field = &field;
-	model.setSpatialParent(this);
-	inputHandler.setSpatialParent(this);
-	domeModel.setSpatialParent(this);
 }
 
 void Screen::update() {
