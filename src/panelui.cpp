@@ -12,16 +12,17 @@ using namespace SKMath;
 std::map<PanelItem, std::unique_ptr<PanelItemUI>> panels;
 
 int main(int argc, char *argv[]) {
-	StardustXRFusion::Setup();
+	if(!StardustXRFusion::Setup())
+		return 0;
 
 	PanelItem::registerUIHandlers([&](PanelItem &item, PanelItem::Data data) {
 		PanelItemUI *ui = new PanelItemUI(item, data.width, data.height, 0.15f, 0.01f);
 		panels.emplace(item, ui);
 		ui->setOrigin(vec3_forward * 0.4f);
 	}, [&](PanelItem &item) {
-		panels[item]->setEnabled(false);
+		panels[item]->setCaptured(true);
 	}, [&](PanelItem &item, PanelItem::Data data) {
-		panels[item]->setEnabled(true);
+		panels[item]->setCaptured(false);
 	}, [&](PanelItem &item) {
 		panels.erase(item);
 	});

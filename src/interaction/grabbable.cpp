@@ -14,22 +14,21 @@ using namespace StardustXRFusion;
 
 Grabbable::Grabbable(Spatial root, const Field field, float maxDistance) :
 Spatial(root),
+maxDistance(maxDistance),
 field(field),
-inputHandler(nullptr, this->field, vec3_zero, quat_identity),
-grabSpace(root),
+inputHandler(Root(), this->field, vec3_zero, quat_identity),
+grabSpace(&inputHandler),
 scrollSpace(&grabSpace) {
 
-	inRangeAction.captureOnTrigger = false;
-	inRangeAction.pointerActiveCondition = [&](const std::string, const PointerInput &, const Datamap &) { return true; };
-	inRangeAction.handActiveCondition = [&](const std::string, const HandInput &, const Datamap &) { return true; };
-	inputHandler.actions.push_back(&inRangeAction);
+//	inRangeAction.captureOnTrigger = false;
+//	inRangeAction.pointerActiveCondition = [&](const std::string, const PointerInput &, const Datamap &) { return true; };
+//	inRangeAction.handActiveCondition = [&](const std::string, const HandInput &, const Datamap &) { return true; };
+//	inputHandler.actions.push_back(&inRangeAction);
 
 	grabAction.captureOnTrigger = true;
 	grabAction.pointerActiveCondition = std::bind(&Grabbable::pointerGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	grabAction.handActiveCondition = std::bind(&Grabbable::handGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	inputHandler.actions.push_back(&grabAction);
-
-	this->maxDistance = maxDistance;
 
 	setSpatialParent(&inputHandler);
 }
@@ -37,16 +36,12 @@ Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, const Stardu
 		Grabbable(Spatial(Root(), origin, orientation, vec3_one, true, true, false, true), field, maxDistance) {}
 
 bool Grabbable::pointerGrabbingCondition(const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
-	field.distance(&inputHandler, pointer.deepestPoint, [this, uuid](float distance) {
-		grabbingInputDistances[uuid] = distance;
-	});
-
 	bool previouslyGrabbed = std::find(grabAction.activelyActing.begin(), grabAction.activelyActing.end(), uuid) != grabAction.activelyActing.end();
-	if(!previouslyGrabbed && grabbingInputDistances[uuid] > maxDistance)
+	if(!previouslyGrabbed && pointer.distance > maxDistance)
 		return false;
 
 	const float context = datamap.getFloat("context");
-	return context > 0.9f && grabbingInputDistances.count(uuid) > 0 && grabbingInputDistances[uuid] < maxDistance;
+	return context > 0.9f;
 }
 bool Grabbable::handGrabbingCondition(const std::string uuid, const HandInput &hand, const Datamap &datamap) {
 	bool previouslyGrabbed = std::find(grabAction.activelyActing.begin(), grabAction.activelyActing.end(), uuid) != grabAction.activelyActing.end();
@@ -64,13 +59,10 @@ void Grabbable::update() {
 	if(grabAction.startedActing.size() > 0) {
 		if(grabbingInputUUID == "")
 			onStartedGrabbing();
-		else
-			grabbingInputDistances.erase(grabbingInputUUID);
 		grabbingInputUUID = grabAction.startedActing.begin()->uuid;
 		setSpatialParentInPlace(Root());
 		setZoneable(false); // If anything is actively grabbing this, it shouldn't be zoneable
 	} else if(std::find(grabAction.stoppedActing.begin(), grabAction.stoppedActing.end(), grabbingInputUUID) != grabAction.stoppedActing.end()) {
-		grabbingInputDistances.erase(grabbingInputUUID);
 		grabbingInputUUID = "";
 		setSpatialParentInPlace(Root());
 		setZoneable(true);
@@ -100,24 +92,3 @@ void Grabbable::update() {
 	if(grabAction.startedActing.size() > 0)
 		setSpatialParentInPlace(&scrollSpace);
 }
-
-//bool Grabbable::pointerInput(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap) {
-//	field->distance(&inputHandler, pointer.deepestPoint, [&](float distance) {
-//		pointDistance = distance;
-//	});
-//	if(pointDistance > maxDistance && !xInteract.isActive())
-//		return false;
-//	const float context = datamap.getFloat("context");
-//	xInteract.input(context > 0.9f);
-
-//	if(xInteract.isActive()) {
-//		vec3 offset = vec3_zero;
-//		vec2 scroll = datamap.getVec2("scroll");
-//		if(scroll.y != 0.0f)
-//			offset = pointer.direction * scroll.y * 0.01f;
-//		matrix pointMat = matrix_trs(pointer.origin + offset, quat_lookat(vec3_zero, pointer.direction), vec3_one);
-//		grab(pointMat);
-//		startItemMat = startItemMat * matrix_trs(offset, quat_identity, vec3_one);
-//	}
-//	return xInteract.isActive();
-//}

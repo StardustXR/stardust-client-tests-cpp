@@ -13,13 +13,14 @@ public:
 	void update();
 	StardustXRFusion::PanelItem panel;
 
-	void setEnabled(bool enabled);
+	void setCaptured(bool captured);
 
 protected:
+	bool captured = false;
 	uint32_t pixelWidth;
 	uint32_t pixelHeight;
 	float width;
 	float thickness;
 	StardustXRFusion::Model model;
-	StardustXRFusion::BoxField boxField;
+	StardustXRFusion::BoxField *boxField;
 };
