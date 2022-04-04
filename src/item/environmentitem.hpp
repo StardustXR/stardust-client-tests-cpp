@@ -13,5 +13,5 @@ public:
 protected:
 	StardustXRFusion::EnvironmentItem environmentItem;
 	StardustXRFusion::Model model;
-	StardustXRFusion::SphereField sphereField;
+	StardustXRFusion::SphereField *sphereField;
 };

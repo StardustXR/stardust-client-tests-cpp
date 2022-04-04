@@ -5,6 +5,7 @@
 #include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include <stardustxr/fusion/types/fields/field.hpp>
 #include <stardustxr/fusion/types/input/inputactionhandler.hpp>
+#include <stardustxr/fusion/types/input/actions/singleactor.hpp>
 
 class Grabbable : public StardustXRFusion::Spatial {
 public:
@@ -20,13 +21,15 @@ public:
 
 	StardustXRFusion::Field field;
 	StardustXRFusion::InputActionHandler inputHandler;
-//	StardustXRFusion::InputActionHandler::Action inRangeAction;
-	StardustXRFusion::InputActionHandler::Action grabAction;
+	StardustXRFusion::InputActionHandler::Action inRangeAction;
+	StardustXRFusion::SingleActorAction grabAction;
+	std::vector<std::string> improperlyGrabbed;
+	std::vector<std::string> movedOutOfRange;
 protected:
 	bool pointerGrabbingCondition(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
 	bool handGrabbingCondition(const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
+	bool grabCondition(const std::string uuid, float distance, bool gesture);
 
-	std::string grabbingInputUUID;
 	StardustXRFusion::Spatial grabSpace;
 	StardustXRFusion::Spatial scrollSpace;
 	float scrollDistance = 0;

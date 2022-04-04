@@ -2,8 +2,7 @@ item_includes = include_directories('.')
 
 lib_item = static_library(
 	'item',
-	files(
-                'item.cpp',
+        files(
                 'environmentitem.cpp',
                 'panel.cpp',
 	),
