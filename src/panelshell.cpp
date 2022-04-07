@@ -14,6 +14,7 @@
 #include <stardustxr/fusion/types/drawable/model.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/inputactionhandler.hpp>
+#include <stardustxr/fusion/types/input/actions/singleactor.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
 #include <stardustxr/fusion/types/input/types/handinput.hpp>
 #include <stardustxr/fusion/types/items/acceptors/panel.hpp>
@@ -65,7 +66,8 @@ int main(int, char *[]) {
 	};
 
 	float maxDistance = 0.005f;
-	InputActionHandler::Action inRangeAction(false);
+	SingleActorAction inRangeAction;
+	inRangeAction.captureOnTrigger = false;
 	inRangeAction.pointerActiveCondition = [maxDistance](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
 		return pointer.origin.z > 0 && pointer.distance < maxDistance;
 	};
@@ -73,36 +75,39 @@ int main(int, char *[]) {
 		const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
 		return pinchPos.z > 0 && hand.distance < maxDistance;
 	};
+	inputHandler.actions.push_back(&inRangeAction);
 
 	float scrollMultiplier = 5;
 	StardustXRFusion::OnLogicStep([&](double delta, double) {
 		inputHandler.update();
 		if(!panel)
 			return;
-		for(InputActionHandler::InputMethod &input : inRangeAction.activelyActing) {
+		if(inRangeAction.actorActing) {
 			vec2 cursor = vec2_zero;
+			Datamap *datamap = &inRangeAction.actor->datamap;
 
-			PointerInput *pointer = input.pointer.get();
+			PointerInput *pointer = inRangeAction.actor->pointer.get();
 			if(pointer) {
 				cursor.x = map(pointer->deepestPoint.x,        -0.2f,         0.2f, 0, 800);
 				cursor.y = map(pointer->deepestPoint.y,  0.312254f/2, -0.312254f/2, 0, 600);
 				panel->setPointerPosition(cursor);
 
-				const float selectPressed = input.datamap.getFloat("select");
+				const float selectPressed = datamap->getFloat("select");
 				panel->setPointerButtonPressed(BTN_LEFT, selectPressed > 0.9f);
 
-				const vec2 scroll = input.datamap.getVec2("scroll");
-				panel->scrollPointerAxis(0, scroll.x * scrollMultiplier, scroll.y * scrollMultiplier, (int32_t) scroll.x, (int32_t) scroll.y);
+				const vec2 scroll = datamap->getVec2("scroll");
+				if(scroll.x != 0 && scroll.y != 0)
+					panel->scrollPointerAxis(0, scroll.x * scrollMultiplier, scroll.y * scrollMultiplier, (int32_t) scroll.x, (int32_t) scroll.y);
 			}
 
-			HandInput *hand = input.hand.get();
+			HandInput *hand = inRangeAction.actor->hand.get();
 			if(hand) {
 				const vec3 pinchPos = (hand->thumb().tip().pose.position + hand->index().tip().pose.position) * 0.5f;
 				cursor.x = map(pinchPos.x,        -0.2f,         0.2f, 0, 800);
 				cursor.y = map(pinchPos.y,  0.312254f/2, -0.312254f/2, 0, 600);
 				panel->setPointerPosition(cursor);
 
-				const float pinchStrength = input.datamap.getFloat("pinchStrength");
+				const float pinchStrength = datamap->getFloat("pinchStrength");
 				panel->setPointerButtonPressed(BTN_LEFT, pinchStrength > 0.9f);
 			}
 		}
