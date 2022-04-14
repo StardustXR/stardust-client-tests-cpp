@@ -23,6 +23,8 @@ using namespace StardustXRFusion;
 using namespace SKMath;
 
 PanelItem *panel = nullptr;
+float maxDistance = 0.005f;
+float scrollMultiplier = 5;
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
@@ -65,52 +67,58 @@ int main(int, char *[]) {
 		}
 	};
 
-	float maxDistance = 0.005f;
-	SingleActorAction inRangeAction;
-	inRangeAction.captureOnTrigger = false;
-	inRangeAction.pointerActiveCondition = [maxDistance](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
-		return pointer.origin.z > 0 && pointer.distance < maxDistance;
+	SingleActorAction hoverAction(false);
+	hoverAction.pointerActiveCondition = [](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
+		return panel && pointer.origin.z > 0 && pointer.distance < maxDistance;
 	};
-	inRangeAction.handActiveCondition = [maxDistance](const std::string uuid, const HandInput &hand, const Datamap &datamap){
+	hoverAction.handActiveCondition = [](const std::string uuid, const HandInput &hand, const Datamap &datamap){
 		const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
-		return pinchPos.z > 0 && hand.distance < maxDistance;
+		return panel && pinchPos.z > 0 && hand.distance < maxDistance;
 	};
-	inputHandler.actions.push_back(&inRangeAction);
+	inputHandler.actions.push_back(&hoverAction);
 
-	float scrollMultiplier = 5;
+	SingleActorAction leftClick(true, true, &hoverAction);
+	leftClick.pointerActiveCondition = [](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
+		return panel && (datamap.getFloat("select") > 0.9f || datamap.getFloat("left") > 0.9f);
+	};
+	leftClick.handActiveCondition = [](const std::string uuid, const HandInput &hand, const Datamap &datamap){
+		return panel && datamap.getFloat("pinchStrength") > 0.9f;
+	};
+	inputHandler.actions.push_back(&leftClick);
+
 	StardustXRFusion::OnLogicStep([&](double delta, double) {
 		inputHandler.update();
 		if(!panel)
 			return;
-		if(inRangeAction.actorActing) {
-			vec2 cursor = vec2_zero;
-			Datamap *datamap = &inRangeAction.actor->datamap;
+		if(hoverAction.actorActing) {
+			vec2 cursorUnit = vec2_zero;
+			vec2 cursorPixel = vec2_zero;
 
-			PointerInput *pointer = inRangeAction.actor->pointer.get();
+			PointerInput *pointer = hoverAction.actor->pointer.get();
+			HandInput *hand = hoverAction.actor->hand.get();
 			if(pointer) {
-				cursor.x = map(pointer->deepestPoint.x,        -0.2f,         0.2f, 0, 800);
-				cursor.y = map(pointer->deepestPoint.y,  0.312254f/2, -0.312254f/2, 0, 600);
-				panel->setPointerPosition(cursor);
+				cursorUnit.x = pointer->deepestPoint.x;
+				cursorUnit.y = pointer->deepestPoint.y;
 
-				const float selectPressed = datamap->getFloat("select");
-				panel->setPointerButtonPressed(BTN_LEFT, selectPressed > 0.9f);
-
+				Datamap *datamap = &hoverAction.actor->datamap;
 				const vec2 scroll = datamap->getVec2("scroll");
 				if(scroll.x != 0 && scroll.y != 0)
 					panel->scrollPointerAxis(0, scroll.x * scrollMultiplier, scroll.y * scrollMultiplier, (int32_t) scroll.x, (int32_t) scroll.y);
 			}
-
-			HandInput *hand = inRangeAction.actor->hand.get();
 			if(hand) {
 				const vec3 pinchPos = (hand->thumb().tip().pose.position + hand->index().tip().pose.position) * 0.5f;
-				cursor.x = map(pinchPos.x,        -0.2f,         0.2f, 0, 800);
-				cursor.y = map(pinchPos.y,  0.312254f/2, -0.312254f/2, 0, 600);
-				panel->setPointerPosition(cursor);
-
-				const float pinchStrength = datamap->getFloat("pinchStrength");
-				panel->setPointerButtonPressed(BTN_LEFT, pinchStrength > 0.9f);
+				cursorUnit.x = pinchPos.x;
+				cursorUnit.y = pinchPos.y;
 			}
+
+			cursorPixel.x = mapClamped(cursorUnit.x,        -0.2f,         0.2f, 0, 800);
+			cursorPixel.y = mapClamped(cursorUnit.y,  0.312254f/2, -0.312254f/2, 0, 600);
+			panel->setPointerPosition(cursorPixel);
 		}
+		if(leftClick.actorStarted)
+			panel->setPointerButtonPressed(BTN_LEFT, true);
+		if(leftClick.actorStopped)
+			panel->setPointerButtonPressed(BTN_LEFT, false);
 	});
 
 	panelAcceptor.itemCapturedMethod = [&crt](PanelItem &panelItem, PanelItem::Data data) {

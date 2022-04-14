@@ -23,11 +23,9 @@ public:
 	StardustXRFusion::InputActionHandler inputHandler;
 	StardustXRFusion::InputActionHandler::Action inRangeAction;
 	StardustXRFusion::SingleActorAction grabAction;
-	std::vector<std::string> improperlyGrabbed;
 protected:
 	bool pointerGrabbingCondition(const std::string uuid, const StardustXRFusion::PointerInput &pointer, const StardustXRFusion::Datamap &datamap);
 	bool handGrabbingCondition(const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap);
-	bool grabCondition(const std::string uuid, bool gesture);
 
 	StardustXRFusion::Spatial grabSpace;
 	StardustXRFusion::Spatial scrollSpace;

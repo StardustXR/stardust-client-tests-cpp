@@ -17,6 +17,7 @@ Spatial(root),
 maxDistance(maxDistance),
 field(field),
 inputHandler(Root(), this->field, vec3_zero, quat_identity),
+grabAction(true, true, &inRangeAction),
 grabSpace(&inputHandler),
 scrollSpace(&grabSpace) {
 
@@ -25,8 +26,6 @@ scrollSpace(&grabSpace) {
 	inRangeAction.handActiveCondition = [&](const std::string, const HandInput &hand, const Datamap &) { return hand.distance < maxDistance; };
 	inputHandler.actions.push_back(&inRangeAction);
 
-	grabAction.changeActor = false;
-	grabAction.captureOnTrigger = true;
 	grabAction.pointerActiveCondition = std::bind(&Grabbable::pointerGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	grabAction.handActiveCondition = std::bind(&Grabbable::handGrabbingCondition, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	inputHandler.actions.push_back(&grabAction);
@@ -38,28 +37,12 @@ Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, const Stardu
 
 bool Grabbable::pointerGrabbingCondition(const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
 	const float select = datamap.getFloat("select");
-	return grabCondition(uuid, select);
+	return select > 0.9f;
 }
 bool Grabbable::handGrabbingCondition(const std::string uuid, const HandInput &hand, const Datamap &datamap) {
 	const float pinchStrength = datamap.getFloat("pinchStrength");
 	const float grabStrength = datamap.getFloat("grabStrength");
-	return grabCondition(uuid, pinchStrength > 0.9f && grabStrength < 0.1f);
-}
-
-bool Grabbable::grabCondition(const std::string uuid, bool gesture) {
-	bool previouslyInRange = std::find(inRangeAction.activelyActing.begin(), inRangeAction.activelyActing.end(), uuid) != inRangeAction.activelyActing.end();
-	bool previouslyGrabbed = std::find(grabAction.activelyActing.begin(), grabAction.activelyActing.end(), uuid) != grabAction.activelyActing.end();
-	bool isImproperlyGrabbed = std::find(improperlyGrabbed.begin(), improperlyGrabbed.end(), uuid) != improperlyGrabbed.end();
-	if(!gesture && isImproperlyGrabbed) {
-		improperlyGrabbed.erase(std::remove(improperlyGrabbed.begin(), improperlyGrabbed.end(), uuid));
-		return false;
-	}
-	if(!isImproperlyGrabbed && !previouslyInRange && !previouslyGrabbed && gesture) {
-		improperlyGrabbed.push_back(uuid);
-		return false;
-	}
-
-	return (previouslyInRange || previouslyGrabbed) && gesture && !isImproperlyGrabbed;
+	return pinchStrength > 0.9f && grabStrength < 0.1f;
 }
 
 void Grabbable::update() {
