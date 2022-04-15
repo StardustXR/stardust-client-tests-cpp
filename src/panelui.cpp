@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 		return 0;
 
 	PanelItem::registerUIHandlers([&](PanelItem &item, PanelItem::Data data) {
-		PanelItemUI *ui = new PanelItemUI(item, data.width, data.height, 0.15f, 0.01f);
+		PanelItemUI *ui = new PanelItemUI(item, data.width, data.height, 0.05f, 0.01f);
 		panels.emplace(item, ui);
 		ui->setOrigin(vec3_forward * 0.4f);
 	}, [&](PanelItem &item) {
