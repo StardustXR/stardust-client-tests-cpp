@@ -137,5 +137,5 @@ int main(int, char *[]) {
 			panel = nullptr;
 	};
 
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

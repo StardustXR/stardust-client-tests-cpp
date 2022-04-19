@@ -46,9 +46,9 @@ int main(int argc, char *argv[]) {
 	OnLogicStep([&](double, double) {
 		acceptorGrab.update();
 		for(EnvironmentItem &item : environmentItems) {
-			item.update();
+//			item.update();
 		}
 		environmentAcceptor.update();
 	});
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

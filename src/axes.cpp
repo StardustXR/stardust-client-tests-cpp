@@ -6,5 +6,5 @@ using namespace StardustXRFusion;
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
 	Model objectModel(nullptr, "../res/axes.glb");
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

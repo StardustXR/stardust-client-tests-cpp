@@ -21,5 +21,5 @@ int main(int argc, char *argv[]) {
 		environmentItems.emplace_back(nullptr, path, vec3_zero, quat_identity);
 	}
 	
-//	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

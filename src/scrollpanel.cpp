@@ -101,5 +101,5 @@ int main() {
 		}
 	});
 
-	StallMainThread();
+	RunEventLoop();
 }

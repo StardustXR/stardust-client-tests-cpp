@@ -139,6 +139,6 @@ int main(int, char *[]) {
 		}
 	}
 
-	shutdown:
+//	shutdown:
 	xcb_disconnect(xConnect);
 }

@@ -14,5 +14,5 @@ int main(int, char *[]) {
 	OnLogicStep([&](double, double) {
 		discordScreen.update();
 	});
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

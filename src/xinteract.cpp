@@ -37,5 +37,5 @@ int main(int, char *[]) {
 		xInteract.update();
 		fflush(stdout);
 	});
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

@@ -16,6 +16,8 @@ double delta = 1.0 / physicsRate;
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
+	perror("borken demo");
+	return 1;
 
 	float cubeSize = 0.08;
 	Model objectModel(nullptr, "../res/realitycomposer.glb", vec3_zero, quat_identity, vec3_one * cubeSize);

@@ -9,5 +9,5 @@ int main() {
 
 	Model dome(nullptr, "../res/environments/DefaultEnvironment.glb");
 
-	StallMainThread();
+	RunEventLoop();
 }

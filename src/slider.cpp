@@ -67,5 +67,5 @@ int main(int argc, const char* const argv[]) {
 			}
 		}
 	});
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

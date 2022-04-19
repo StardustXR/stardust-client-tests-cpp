@@ -45,5 +45,5 @@ int main(int, char *[]) {
 //			floor.setMaterialProperty(0, "color", newColor);
 //		oldColor = newColor;
 //	});
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

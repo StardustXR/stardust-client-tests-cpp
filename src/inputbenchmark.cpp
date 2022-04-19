@@ -47,5 +47,5 @@ int main() {
 		}
 	});
 
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }

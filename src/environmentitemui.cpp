@@ -35,5 +35,5 @@ int main(int argc, char *argv[]) {
 		}
 	});
 	
-	StardustXRFusion::StallMainThread();
+	StardustXRFusion::RunEventLoop();
 }
