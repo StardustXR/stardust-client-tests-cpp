@@ -1,17 +1,11 @@
-interaction_includes = include_directories('.')
-
-lib_interaction = static_library(
-	'interaction',
-	files(
-                'button.cpp',
-                'grabbable.cpp',
-		'mediaplayer.cpp',
-		'screen.cpp',
-		'slider.cpp',
-		'xinteract.cpp',
-	),
-	include_directories: [interaction_includes],
-	dependencies: [fusion],
+common_files += files(
+    'button.cpp',
+    'grabbable.cpp',
+    'screen.cpp',
+    'slider.cpp',
+    'xinteract.cpp',
+)
+dbus_files += files(
+    'mediaplayer.cpp',
 )
 
-sublibs += lib_interaction

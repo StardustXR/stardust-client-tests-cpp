@@ -28,11 +28,11 @@ float scrollMultiplier = 5;
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
-	Spatial root(Root(), vec3{0, -0.5f, -0.5f}, quat_identity, vec3_one, true, true, false, true);
+	Spatial root(Root(), vec3_zero, quat_identity, vec3_one, true, true, false, true);
 
-	Model crt(&root, "../res/panelshell/crt.glb", vec3_zero, quat_from_angles(0, 180, 0));
+	Model crt(&root, "../res/panelshell/crt.glb");
 
-	BoxField panelAcceptorField(&root, vec3{0, 0.23f, -0.08f}, quat_identity, vec3{0.471f, 0.46f, 0.168f});
+	BoxField panelAcceptorField(&root, vec3{0, 0.23f, 0.08f}, quat_identity, vec3{0.471f, 0.46f, 0.168f});
 	PanelItemAcceptor panelAcceptor(&root, panelAcceptorField, vec3_zero, quat_identity);
 
 	Spatial screenCenter(&root, vec3{0, 0.27f, -0.004927f});
@@ -69,11 +69,11 @@ int main(int, char *[]) {
 
 	SingleActorAction hoverAction(false);
 	hoverAction.pointerActiveCondition = [](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){
-		return panel && pointer.origin.z > 0 && pointer.distance < maxDistance;
+		return panel && pointer.origin.z < 0 && pointer.distance < maxDistance;
 	};
 	hoverAction.handActiveCondition = [](const std::string uuid, const HandInput &hand, const Datamap &datamap){
 		const vec3 pinchPos = (hand.thumb().tip().pose.position + hand.index().tip().pose.position) * 0.5f;
-		return panel && pinchPos.z > 0 && hand.distance < maxDistance;
+		return panel && pinchPos.z < 0 && hand.distance < maxDistance;
 	};
 	inputHandler.actions.push_back(&hoverAction);
 
@@ -111,7 +111,7 @@ int main(int, char *[]) {
 				cursorUnit.y = pinchPos.y;
 			}
 
-			cursorPixel.x = mapClamped(cursorUnit.x,        -0.2f,         0.2f, 0, 800);
+			cursorPixel.x = mapClamped(cursorUnit.x,         0.2f,        -0.2f, 0, 800);
 			cursorPixel.y = mapClamped(cursorUnit.y,  0.312254f/2, -0.312254f/2, 0, 600);
 			panel->setPointerPosition(cursorPixel);
 		}

@@ -1,12 +1,5 @@
-dbus_includes = include_directories('.')
-
-lib_dbus = static_library(
-	'dbus',
-	files(
-		'player.cpp',
-	),
-	include_directories: [dbus_includes],
-	dependencies: [dbus],
+if dbus.found()
+dbus_files += files(
+    'player.cpp',
 )
-
-sublibs += lib_dbus
+endif
