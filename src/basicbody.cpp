@@ -2,13 +2,13 @@
 #include <iostream>
 #include <thread>
 
+#include <stardustxr/fusion/values/glm.hpp>
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/types/drawable/model.hpp>
 
 #include "physics/physicsbody.hpp"
 
 using namespace StardustXRFusion;
-using namespace SKMath;
 
 int physicsRate = 60;
 int64_t physicsStepMS = 1000 / physicsRate;
@@ -19,21 +19,21 @@ int main(int, char *[]) {
 	perror("borken demo");
 	return 1;
 
-	float cubeSize = 0.08;
-	Model objectModel(nullptr, "../res/realitycomposer.glb", vec3_zero, quat_identity, vec3_one * cubeSize);
-	PhysicsBody objectPhysics;
+	// float cubeSize = 0.08;
+	// Model objectModel(nullptr, "res/realitycomposer.glb", Vec3::Zero, Quat::Identity, Vec3::One * cubeSize);
+	// PhysicsBody objectPhysics;
 
-	vec3 boostVelocity = -vec3_right * 0.5f;
+	// Vec3 boostVelocity = -Vec3::Right * 0.5f;
 
-	while(1) {
-		if(vec3_magnitude_sq(objectPhysics.velocity) == 0) {
-			boostVelocity = -boostVelocity;
-			objectPhysics.addImpulse(boostVelocity);
-		}
+	// while(1) {
+	// 	if(glm::length(objectPhysics.velocity) == 0) {
+	// 		boostVelocity = -boostVelocity;
+	// 		objectPhysics.addImpulse(boostVelocity);
+	// 	}
 
-		objectPhysics.step(delta);
-		objectModel.setOrigin(objectPhysics.position);
+	// 	objectPhysics.step(delta);
+	// 	objectModel.setOrigin(objectPhysics.position);
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(physicsStepMS));
-	}
+	// 	std::this_thread::sleep_for(std::chrono::milliseconds(physicsStepMS));
+	// }
 }

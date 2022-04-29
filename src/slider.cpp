@@ -1,12 +1,13 @@
 #include <chrono>
 
+#include <stardustxr/fusion/values/glm.hpp>
+#include <stardustxr/fusion/fusion.hpp>
 #include "interaction/slider.hpp"
 #include "CLI11.hpp"
 
-#include <stardustxr/fusion/fusion.hpp>
 
 using namespace StardustXRFusion;
-using namespace SKMath;
+
 
 uint sliderCount = 50;
 float sliderSpacing = 0.03f;
@@ -29,14 +30,14 @@ int main(int argc, const char* const argv[]) {
 
 	StardustXRFusion::Setup();
 
-	Spatial root(Root(), vec3_forward * 0.5f, quat_identity);
+	Spatial root(Root(), Vec3::Forward * 0.5f, Quat::Identity);
 	// root.setOrientation(quat_from_angles(180, 180, 0));
 
 	Slider *eqSliders[sliderCount];
 	for(uint i=0; i<sliderCount; ++i) {
 		eqSliders[i] = new Slider(&root, sliderHeight, 0, 1);
 		eqSliders[i]->setOrigin({i*sliderSpacing, sliderSpacing, 0});
-		eqSliders[i]->setOrientation(quat_from_angles(0, 0, 90));
+		eqSliders[i]->setOrientation(glm::quat(glm::vec3(0, 0, 90)));
 		eqSliders[i]->setSliderValue(0.5f);
 	}
 

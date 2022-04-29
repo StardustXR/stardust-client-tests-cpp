@@ -1,13 +1,13 @@
 #include <sys/time.h>
 #include <map>
 
+#include <stardustxr/fusion/values/glm.hpp>
 #include <stardustxr/fusion/fusion.hpp>
-#include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/inputactionhandler.hpp>
 
 using namespace StardustXRFusion;
-using namespace SKMath;
+
 
 int main() {
 	StardustXRFusion::Setup();
@@ -15,8 +15,8 @@ int main() {
 	timeval tv;
 	std::map<std::string, timeval> checkTimes;
 
-	BoxField box(StardustXRFusion::Root(), vec3_zero, quat_identity, vec3_one * 0.25f);
-	InputActionHandler inputHandler(StardustXRFusion::Root(), box, vec3_zero, quat_identity);
+	BoxField box(StardustXRFusion::Root(), Vec3::Zero, Quat::Identity, Vec3::One * 0.25f);
+	InputActionHandler inputHandler(StardustXRFusion::Root(), box, Vec3::Zero, Quat::Identity);
 
 	InputActionHandler::Action action(false);
 	action.pointerActiveCondition = [&](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){

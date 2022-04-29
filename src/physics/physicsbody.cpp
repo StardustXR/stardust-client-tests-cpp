@@ -1,28 +1,29 @@
 #include "physicsbody.hpp"
 
-using namespace SKMath;
+using namespace StardustXRFusion;
 
 PhysicsBody::PhysicsBody() {}
+PhysicsBody::~PhysicsBody() {}
 
-void PhysicsBody::addImpulse(SKMath::vec3 impulse) {
-	velocity += impulse;
+void PhysicsBody::addImpulse(Vec3 impulse) {
+	velocity = velocity + impulse;
 }
 
-void PhysicsBody::addForce(SKMath::vec3 force) {
-	velocity += force * lastDelta;
+void PhysicsBody::addForce(Vec3 force) {
+	velocity = velocity + (force * lastDelta);
 }
 
-void PhysicsBody::step(double delta) {
+void PhysicsBody::step(float delta) {
 	lastDelta = delta;
 
-	position += velocity * delta;
+	position = position + (velocity * delta);
 	dragStep(delta);
 }
 
-void PhysicsBody::dragStep(double delta) {
-	float vel_sq = vec3_magnitude_sq(velocity);
-	if(vel_sq > drag * drag * delta * delta)
-		velocity -= (velocity/sqrtf(vel_sq)) * drag * delta;
+void PhysicsBody::dragStep(float delta) {
+	float vel = glm::vec3(velocity).length();
+	if(vel > drag * delta)
+		velocity = velocity - (velocity/vel) * drag * delta;
 	else
-		velocity = vec3_zero;
+		velocity = Vec3::Zero;
 }

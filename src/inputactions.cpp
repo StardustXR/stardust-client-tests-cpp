@@ -8,17 +8,17 @@
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
 
 using namespace StardustXRFusion;
-using namespace SKMath;
+
 
 int main(int, char *[]) {
 	if(!StardustXRFusion::Setup())
 		return 1;
-	Spatial root(Root(), vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
+	Spatial root(Root(), Vec3::Forward*0.5f, Quat::Identity, Vec3::One, true, true, false);
 
 	float size = 0.1f;
 
-	BoxField field(&root, vec3_zero, quat_identity, vec3_one * size);
-	InputActionHandler handler(&root, field, vec3_zero, quat_identity);
+	BoxField field(&root, Vec3::Zero, Quat::Identity, Vec3::One * size);
+	InputActionHandler handler(&root, field, Vec3::Zero, Quat::Identity);
 
 	InputActionHandler::Action action(false);
 	action.pointerActiveCondition = [](const std::string uuid, const PointerInput &pointer, const Datamap &datamap){

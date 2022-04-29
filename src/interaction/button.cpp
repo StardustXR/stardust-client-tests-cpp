@@ -1,10 +1,10 @@
-#include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include "button.hpp"
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 using namespace StardustXRFusion;
-using namespace SKMath;
 
-Button::Button(Spatial *space, StardustXRFusion::Field &field, SKMath::vec3 origin, SKMath::quat orientation) : 
+
+Button::Button(Spatial *space, StardustXRFusion::Field &field, Vec3 origin, Quat orientation) :
 StardustXRFusion::InputHandler(space, field, origin, orientation) {
 
 	handHandlerMethod = std::bind(&Button::handInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);

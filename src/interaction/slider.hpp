@@ -1,19 +1,16 @@
 #pragma once
 
-#include <flatbuffers/flexbuffers.h>
-
-#include <stardustxr/fusion/sk_math.hpp>
 #include <stardustxr/fusion/types/drawable/model.hpp>
-#include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include <stardustxr/fusion/types/fields/boxfield.hpp>
 #include <stardustxr/fusion/types/input/datamap.hpp>
 #include <stardustxr/fusion/types/input/inputhandler.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 #include "xinteract.hpp"
 
 class Slider : public StardustXRFusion::Spatial {
 public:
-	explicit Slider(Spatial *parent, float length, float minValue, float maxValue, float barThickness = 0.004f, float orbDiameter = 0.03f, SKMath::color color = SKMath::color{0,0,0.75f,1});
+	explicit Slider(Spatial *parent, float length, float minValue, float maxValue, float barThickness = 0.004f, float orbDiameter = 0.03f, StardustXRFusion::Color = StardustXRFusion::Color{0,0,0.75f,1});
 	~Slider();
 
 	void update();

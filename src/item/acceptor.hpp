@@ -39,7 +39,7 @@ public:
 			Item *item = acceptorItem.item;
 			if(!item || item->getNodePath() == "/")
 				continue;
-			field->distance(item, SKMath::vec3_zero, [acceptorItemPtr](float distance) {
+			field->distance(item, Vec3::Zero, [acceptorItemPtr](float distance) {
 				acceptorItemPtr->distance = distance;
 			});
 		}

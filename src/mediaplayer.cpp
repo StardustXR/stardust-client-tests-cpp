@@ -5,10 +5,12 @@
 #include <thread>
 #include <vector>
 
+#include <stardustxr/fusion/values/glm.hpp>
+#include <stardustxr/fusion/fusion.hpp>
 #include "interaction/mediaplayer.hpp"
 
 using namespace StardustXRFusion;
-using namespace SKMath;
+
 
 int main(int, char**) {
 	StardustXRFusion::Setup();
@@ -30,7 +32,7 @@ int main(int, char**) {
 			if(name.rfind("org.mpris.MediaPlayer2.", 0) == 0) {
 				printf("Creating media controller for connection %s\n", name.c_str());
 				playerCount++;
-				mediaPlayers.emplace_back(new MediaPlayer(*sessionConnection, name, -vec3_right * playerCount * 0.1f));
+				mediaPlayers.emplace_back(new MediaPlayer(*sessionConnection, name, -Vec3::Right * playerCount * 0.1f));
 			}
 		}
 	}

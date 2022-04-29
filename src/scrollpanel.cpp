@@ -13,7 +13,7 @@
 #include "interaction/xinteract.hpp"
 
 using namespace StardustXRFusion;
-using namespace SKMath;
+
 
 int main() {
 	Setup();
@@ -28,12 +28,12 @@ int main() {
 
 	uint32_t surfWidth, surfHeight;
 	float centerWidth = 0.15f;
-	Model center(Root(), "../res/item/scrollpanel.glb");
-	BoxField box(nullptr, vec3_zero, quat_identity, vec3{0.15f, 0.15f, 0.0f});
-	InputHandler handler(nullptr, box, vec3_forward * 0.005f, quat_identity);
+	Model center(Root(), "res/item/scrollpanel.glb");
+	BoxField box(nullptr, Vec3::Zero, Quat::Identity, Vec3{0.15f, 0.15f, 0.0f});
+	InputHandler handler(nullptr, box, Vec3::Forward * 0.005f, Quat::Identity);
 	Model handles[2] = {
-		Model(Root(), "../res/item/scrollpanelhandle.glb",  vec3_right * centerWidth / 2),
-		Model(Root(), "../res/item/scrollpanelhandle.glb", -vec3_right * centerWidth / 2, quat_identity, vec3{-1, -1, 1}),
+		Model(Root(), "res/item/scrollpanelhandle.glb",  Vec3::Right * centerWidth / 2),
+		Model(Root(), "res/item/scrollpanelhandle.glb", -Vec3::Right * centerWidth / 2, Quat::Identity, Vec3{-1, -1, 1}),
 	};
 	PanelItem *panel = nullptr;
 
@@ -45,9 +45,9 @@ int main() {
 			return false;
 		panel->setKeyboardActive(pointer.distance < maxDistance);
 		xInteract.input(false);
-		const SKMath::vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
+		const Vec3 deepestPoint = pointer.origin + (pointer.direction * datamap.getFloat("deepestPointDistance"));
 		if(pointer.origin.z > 0 && pointer.distance < maxDistance) {
-			vec2 cursor;
+			Vec2 cursor;
 			cursor.x = map(deepestPoint.x, -centerWidth/2, centerWidth/2, 0, surfWidth);
 			cursor.y = map(deepestPoint.y,          .15/2,        -.15/2, 0, surfHeight);
 			panel->setPointerPosition(cursor);
@@ -55,7 +55,7 @@ int main() {
 			const float selectPressed = datamap.getFloat("select");
 			panel->setPointerButtonPressed(BTN_LEFT, selectPressed > 0.9f);
 
-			const vec2 scroll = datamap.getVec2("scroll");
+			const Vec2 scroll = datamap.getVec2("scroll");
 			panel->scrollPointerAxis(0, scroll.x * scrollMultiplier, scroll.y * scrollMultiplier, (int32_t) scroll.x, (int32_t) scroll.y);
 
 //			if(selectPressed > 0.9f) {
@@ -92,11 +92,11 @@ int main() {
 				float scale = (float)data.width / (float)data.height;
 				centerWidth = 0.15f * scale;
 
-				center.setScale(vec3{scale, 1, 1});
-				box.setSize(vec3{centerWidth, 0.15f, 0.0f});
+				center.setScale(Vec3{scale, 1, 1});
+				box.setSize(Vec3{centerWidth, 0.15f, 0.0f});
 
-				handles[0].setOrigin( vec3_right * centerWidth / 2);
-				handles[1].setOrigin(-vec3_right * centerWidth / 2);
+				handles[0].setOrigin( Vec3::Right * centerWidth / 2);
+				handles[1].setOrigin(-Vec3::Right * centerWidth / 2);
 			});
 		}
 	});

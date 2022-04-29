@@ -7,7 +7,7 @@ using namespace StardustXRFusion;
 int main() {
 	Setup();
 
-	Model dome(nullptr, "../res/environments/DefaultEnvironment.glb");
+	Model dome(nullptr, "res/environments/DefaultEnvironment.glb");
 
 	RunEventLoop();
 }

@@ -6,7 +6,7 @@
 
 class Button : public StardustXRFusion::InputHandler {
 public:
-	explicit Button(Spatial *space, StardustXRFusion::Field &field, SKMath::vec3 origin, SKMath::quat orientation);
+	explicit Button(Spatial *space, StardustXRFusion::Field &field, StardustXRFusion::Vec3 origin, StardustXRFusion::Quat orientation);
 
 	float indexCurlThreshold = 0.9;
 

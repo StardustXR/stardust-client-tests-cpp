@@ -1,3 +1,4 @@
+#include <cmath>
 #include <unistd.h>
 
 #include <xcb/xcb.h>
@@ -9,12 +10,12 @@
 #include <xcb/xkb.h>
 #undef explicit
 
+#include "include/math_util.hpp"
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/common/flex.hpp>
 #include <stardustxr/fusion/types/data/sender.hpp>
 
 using namespace StardustXRFusion;
-using namespace SKMath;
 
 #define XCB_EVENT_RESPONSE_TYPE_MASK 0x7f
 
@@ -62,8 +63,8 @@ int main(int, char *[]) {
 	double elapsedTime = 0;
 	PulseSender keyboard(StardustXRFusion::Root());
 	StardustXRFusion::OnLogicStep([&](double delta, double) {
-		double oldCheckCount = floor(elapsedTime / checkReceiversInterval);
-		double newCheckCount = floor((elapsedTime / checkReceiversInterval) + delta);
+		double oldCheckCount = std::floor(elapsedTime / checkReceiversInterval);
+		double newCheckCount = std::floor((elapsedTime / checkReceiversInterval) + delta);
 		if(oldCheckCount < newCheckCount) { //check if
 			keyboard.getReceivers([&](std::vector<PulseReceiver> &receivers) {
 				keyboardInputs.clear();

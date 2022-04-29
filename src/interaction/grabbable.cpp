@@ -1,22 +1,19 @@
-#include "../../include/math_util.hpp"
-
-#include <stardustxr/fusion/sk_math.hpp>
+#include <stardustxr/fusion/values/glm.hpp>
+#include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/types/input/datamap.hpp>
 #include <stardustxr/fusion/types/input/types/handinput.hpp>
 #include <stardustxr/fusion/types/input/types/pointerinput.hpp>
-#include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 #include "grabbable.hpp"
 #include "xinteract.hpp"
 
-using namespace SKMath;
 using namespace StardustXRFusion;
 
 Grabbable::Grabbable(Spatial root, const Field field, float maxDistance) :
 Spatial(root),
 maxDistance(maxDistance),
 field(field),
-inputHandler(Root(), this->field, vec3_zero, quat_identity),
+inputHandler(Root(), this->field, Vec3::Zero, Quat::Identity),
 grabAction(true, true, &inRangeAction),
 grabSpace(&inputHandler),
 scrollSpace(&grabSpace) {
@@ -32,8 +29,8 @@ scrollSpace(&grabSpace) {
 
 	setSpatialParent(&inputHandler);
 }
-Grabbable::Grabbable(SKMath::vec3 origin, SKMath::quat orientation, const StardustXRFusion::Field field, float maxDistance) :
-		Grabbable(Spatial(Root(), origin, orientation, vec3_one, true, true, false, true), field, maxDistance) {}
+Grabbable::Grabbable(Vec3 origin, Quat orientation, const StardustXRFusion::Field field, float maxDistance) :
+		Grabbable(Spatial(Root(), origin, orientation, Vec3::One, true, true, false, true), field, maxDistance) {}
 
 bool Grabbable::pointerGrabbingCondition(const std::string uuid, const PointerInput &pointer, const Datamap &datamap) {
 	const float select = datamap.getFloat("select");
@@ -58,20 +55,20 @@ void Grabbable::update() {
 
 	if(grabAction.actorActing) {
 		if(grabAction.actor->hand.get()) {
-			grabSpace.setPose(pose_t{
+			grabSpace.setPose(Pose(
 				(grabAction.actor->hand->thumb().tip().pose.position +
 				 grabAction.actor->hand->index().tip().pose.position) * 0.5f,
-				 grabAction.actor->hand->palm.pose.orientation
-			});
+				 grabAction.actor->hand->palm.pose.rotation
+			));
 		} else if(grabAction.actor->pointer.get()) {
-			grabSpace.setPose(pose_t{
+			grabSpace.setPose(Pose(
 				grabAction.actor->pointer->origin,
-				quat_lookat(vec3_zero, grabAction.actor->pointer->direction)
-			});
+				glm::quatLookAt(glm::vec3(grabAction.actor->pointer->direction), glm::vec3(Vec3::Up))
+			));
 			if(grabAction.actor->datamap.exists("scroll")) {
-				vec2 scroll = grabAction.actor->datamap.getVec2("scroll");
+				Vec2 scroll = grabAction.actor->datamap.getVec2("scroll");
 				scrollDistance += scroll.y * 0.05f;
-				scrollSpace.setOrigin(vec3_forward * scrollDistance);
+				scrollSpace.setOrigin(Vec3::Forward * scrollDistance);
 			}
 		}
 	}

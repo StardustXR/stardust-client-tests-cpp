@@ -1,0 +1,14 @@
+[default]
+name=Default
+runtime=host
+toolchain=default
+config-opts=
+run-opts=
+prefix=/run/media/nova/MEDIA/xr/stardust/prefix/
+app-id=
+postbuild=
+prebuild=
+default=true
+
+[default.environment]
+PKG_CONFIG_PATH=/run/media/nova/MEDIA/xr/stardust/prefix/lib/pkgconfig/

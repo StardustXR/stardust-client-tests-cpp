@@ -1,8 +1,4 @@
 #include "xinteract.hpp"
-#include <cstdio>
-
-using namespace StardustXRFusion;
-using namespace SKMath;
 
 XInteract::XInteract() {}
 

@@ -1,19 +1,17 @@
 #pragma once
 
+#include <stardustxr/fusion/types/drawable/model.hpp>
+#include <stardustxr/fusion/types/fields/boxfield.hpp>
+#include <stardustxr/fusion/types/spatial/spatial.hpp>
+
 #include "../dbus/player.hpp"
 #include "grabbable.hpp"
 #include "slider.hpp"
-#include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include <string>
-
-#include <stardustxr/fusion/fusion.hpp>
-#include <stardustxr/fusion/sk_math.hpp>
-#include <stardustxr/fusion/types/drawable/model.hpp>
-#include <stardustxr/fusion/types/fields/boxfield.hpp>
 
 class MediaPlayer {
 public:
-	explicit MediaPlayer(sdbus::IConnection &connection, std::string busName, SKMath::vec3 position = SKMath::vec3_zero, SKMath::quat rotation = SKMath::quat_identity);
+	explicit MediaPlayer(sdbus::IConnection &connection, std::string busName, StardustXRFusion::Vec3 position = StardustXRFusion::Vec3::Zero, StardustXRFusion::Quat rotation = StardustXRFusion::Quat::Identity);
 
 	void update(double delta);
 

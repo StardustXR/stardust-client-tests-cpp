@@ -10,18 +10,18 @@
 #include "interaction/xinteract.hpp"
 
 using namespace StardustXRFusion;
-using namespace SKMath;
+
 
 int main(int, char *[]) {
 	StardustXRFusion::Setup();
-	Spatial root(Root(), vec3_forward*0.5f, quat_identity, vec3_one, true, true, false);
+	Spatial root(Root(), Vec3::Forward*0.5f, Quat::Identity, Vec3::One, true, true, false);
 
 	float size = 0.1f;
 
 	XInteract xInteract;
 
-    BoxField field(&root, vec3_zero, quat_identity, vec3_one * size);
-    InputHandler handler(&root, field, vec3_zero, quat_identity);
+    BoxField field(&root, Vec3::Zero, Quat::Identity, Vec3::One * size);
+    InputHandler handler(&root, field, Vec3::Zero, Quat::Identity);
 	handler.handHandlerMethod = [&xInteract](const std::string uuid, const StardustXRFusion::HandInput &hand, const StardustXRFusion::Datamap &datamap) {
 		if(hand.distance > 0.0f)
 			return false;

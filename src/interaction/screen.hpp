@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stardustxr/fusion/values/glm.hpp>
 #include <stardustxr/fusion/fusion.hpp>
 #include <stardustxr/fusion/types/spatial/spatial.hpp>
 #include <stardustxr/fusion/types/drawable/model.hpp>
@@ -10,7 +11,7 @@
 
 class Screen : public StardustXRFusion::Spatial {
 public:
-	explicit Screen(Spatial &root, SKMath::vec3 origin, SKMath::quat orientation, std::string modelPath, float modelScale, StardustXRFusion::Field &field);
+	explicit Screen(Spatial &root, StardustXRFusion::Vec3 origin, StardustXRFusion::Quat orientation, std::string modelPath, float modelScale, StardustXRFusion::Field &field);
 
 	void update();
 
@@ -24,9 +25,9 @@ protected:
 	StardustXRFusion::Field field;
 	StardustXRFusion::InputHandler inputHandler;
 
-	SKMath::vec3 dimensions = {0.7f, 0.404f, 0.004f};
+	StardustXRFusion::Vec3 dimensions = {0.7f, 0.404f, 0.004f};
 
-	void setCursor(SKMath::vec2 pos);
+	void setCursor(StardustXRFusion::Vec2 pos);
 
 	StardustXRFusion::Model domeModel;
 };

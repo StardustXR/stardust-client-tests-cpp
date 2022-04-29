@@ -1,25 +1,27 @@
 #pragma once
 
+#include <stardustxr/fusion/values/glm.hpp>
 #include <stardustxr/fusion/types/spatial/spatial.hpp>
 
 class PhysicsBody {
 public:
 	explicit PhysicsBody();
+	virtual ~PhysicsBody();
 
 	StardustXRFusion::Spatial *space = nullptr;
 
-	SKMath::vec3 position = SKMath::vec3_zero;
-	SKMath::vec3 velocity = SKMath::vec3_zero;
+	StardustXRFusion::Vec3 position = StardustXRFusion::Vec3::Zero;
+	StardustXRFusion::Vec3 velocity = StardustXRFusion::Vec3::Zero;
 
 	float drag = 0.4f;
 
-	void addImpulse(SKMath::vec3 impulse);
-	void addForce(SKMath::vec3 force);
+	void addImpulse(StardustXRFusion::Vec3 impulse);
+	void addForce(StardustXRFusion::Vec3 force);
 
-	virtual void step(double delta);
+	virtual void step(float delta);
 
-	double lastDelta = 0;
+	float lastDelta = 0;
 
 protected:
-	virtual void dragStep(double delta);
+	virtual void dragStep(float delta);
 };
